@@ -1,1 +1,1 @@
-# AgileMind
+# Agile Mind
