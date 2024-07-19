@@ -4,7 +4,8 @@ import bcrypt from "bcrypt";
 async function RegisterUser(req, res) {
   const userDetail = req.body;
   try {
-    const existingUser = User.findOne({ userEmail: userDetail.userEmail });
+    const existingUser = await User.findOne({ userEmail: userDetail.userEmail });
+
     if (existingUser) {
       res.status(403).json({
         status: "failed",
@@ -14,7 +15,9 @@ async function RegisterUser(req, res) {
       const newUser = new User({
         userEmail: userDetail.userEmail,
         password: userDetail.password,
-        profile: userDetail.profile,
+        role: userDetail.role,
+        firstName: userDetail.firstName,
+        lastName: userDetail.lastName
       });
       const savedUser = await newUser.save();
       res.status(200).json({
@@ -26,7 +29,7 @@ async function RegisterUser(req, res) {
   } catch (err) {
     res.status(500).json({
       status: "error",
-      message: "Internal Server Error",
+      message: "Internal Server Error ",
     });
   }
 }
@@ -54,17 +57,18 @@ async function loginUser(req, res) {
           message: "Your password is incorrect please try again.",
         });
       } else {
-        let options = {
+        /*let options = {
           maxAge: 20 * 60 * 1000, // would expire in 20minutes
           httpOnly: true, // The cookie is only accessible by the web server
           secure: true,
           sameSite: "None",
-        };
+        };*/
         const token = loggedInUser.generateJWTToken();
-        res.cookie("SessionID", token, options);
+        //res.cookie("SessionID", token, options);
         res.status(200).json({
           status: "success",
           message: "You have successfully logged in.",
+          token: token
         });
       }
     }

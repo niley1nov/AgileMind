@@ -4,10 +4,10 @@ import User from "../models/User.js";
 
 async function verifyUser(req, res, next) {
   try {
-    const authHeader = req.headers["cookie"]; // get the session cookie from request header
-    if (!authHeader) return res.sendStatus(401); // if there is no cookie from request header, send an unauthorized response.
-    const cookie = authHeader.split("=")[1]; // If there is, split the cookie string to get the actual jwt
-    jwt.verify(cookie, config.JWT_SECRET_TOKEN, async function (err, decoded) {
+    const authHeader = req.headers["authorization"]; // get the Token from header
+    if (!authHeader) return res.sendStatus(401); // if there is no header then send 401 status
+    const token = authHeader && authHeader.split(' ')[1];
+    jwt.verify(token, config.JWT_SECRET_TOKEN, async function (err, decoded) {
       if (err) {
         return res.status(401).json({
           message: "This session has expired. Please login",

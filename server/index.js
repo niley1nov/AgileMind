@@ -1,26 +1,29 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import cors from 'cors';
 import config from "./config.js";
 import authRouter from "./routes/auth.js";
+import projectRouter from "./routes/projectRouter.js";
+import userRouter from "./routes/userRouter.js";
+
 import cookieParser from "cookie-parser";
-import {verifyUser} from './middlewares/verifyUser.js';
+
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
 //Middleware to parse body in json format
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '20mb' }));
 app.use(cookieParser());
+app.use(cors());
 
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/project",projectRouter);
+app.use("/api/user",userRouter);
 
 
-//For testing purpose
-app.get("/",verifyUser, function (req, res) {
-  res.json({ Test: "TEST" });
-});
 
 //Connect to MongoDB
 mongoose

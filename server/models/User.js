@@ -5,13 +5,15 @@ import config from "../config.js";
 
 const userSchema = new mongoose.Schema(
   {
+    firstName: { type: String, required: "First Name is a required field" },
+    lastName: { type: String, required: "Last Name is a required field" },
     userEmail: {
       type: String,
       required: "Email is a required field",
       unique: true,
     },
     password: { type: String, required: "Password is a required field" },
-    profile: { type: String, required: "Profile is a required field" },
+    role: { type: String, required: "Role is a required field" },
   },
   {
     methods: {

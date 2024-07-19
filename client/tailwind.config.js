@@ -4,7 +4,12 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'cornflower-blue': '#D0BCFF',
+        'meteorite' : '#381E72'
+      }
+    },
   },
   plugins: [],
 }

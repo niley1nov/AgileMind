@@ -1,44 +1,132 @@
-import { useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
+import { memo, useEffect, useState, useCallback } from "react";
 import SearchBar from "../components/SearchBar";
 import ActionBar from "../components/ActionBar";
-import EditProjectButton from "../components/EditProjectButton";
-import SummaryBar from "../components/SummaryBar";
-import CreateProjectButton from "../components/CreateProjectButton";
-import HomePageTable from "../components/HomePageTable";
+import Button from "../components/Button";
+import Table from "../components/Table";
+import CreateProjectModal from "../components/CreateProjectModal";
+import { apiClientForAuthReq } from "../services/apiService";
+import Spinner from "../components/Spinner";
+import PopupMessage from "../components/PopupMessage";
+import { useNavigate, Link } from "react-router-dom";
 
+export default function Home() {
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
+  const [projectList, setProjectList] = useState([]);
+  const navigate = useNavigate();
+  const heading = [
+    { key: "projectName", label: "Project Name" },
+    { key: "startDate", label: "Start Date" },
+    { key: "releaseDate", label: "Release Date" },
+    { key: "totalPhase", label: "# Phases" }
+  ];
 
-export default function Home(){
-    //const navigate = useNavigate();
+  useEffect(function () {
+    getAssignedProjectList();
+  }, []);
 
-    useEffect(function(){
-        console.log('Home Page Mounted');
-    },[])
+  function getAssignedProjectList() {
+    setShowSpinner(true);
+    apiClientForAuthReq
+      .get("/project/getAssignedProjects", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(function (response) {
+        if (response.status == "200") {
+          setProjectList(
+            response.data.map(function (project) {
+              project.projectName = (
+                <Link to={"/Project?id=" + project._id} className="text-blue-500 text-sm hover:text-blue-800">
+                  {project.projectName}
+                </Link>
+              );
+              return project;
+            })
+          );
+        }
+      })
+      .catch(function (e) {
+        console.log(">>> " + JSON.stringify(e));
+        setPopupMessage(e.message);
+        setTimeout(function () {
+          setPopupMessage("");
+        }, 2000);
+        navigate("/login");
+      })
+      .finally(() => {
+        setShowSpinner(false);
+      });
+  }
 
-    /*function onButtonClick(){
-        navigate('/Project');
-    }*/
-    return (
-        <div className="w-full h-full px-20 text-white">
-            <div className="flex flex-col w-full h-full">
-                <div className="pt-8">
-                    <SearchBar/>
-                </div>
-                <div className="pt-8">
-                    <ActionBar textToShow="Dashoboard">
-                        <EditProjectButton/>
-                    </ActionBar>
-                </div>
-                <div className="pt-8">
-                    <SummaryBar textToShow="Project Management"></SummaryBar>
-                </div>
-                <div className="pt-8">
-                    <CreateProjectButton/>
-                </div>
-                <div className="pt-2">
-                    <HomePageTable/>
-                </div>
-            </div>
+  const openCreateProjectModal = useCallback(function () {
+    setOpenCreateModal(true);
+  }, []);
+
+  const closeCreateProjectModal = useCallback(function () {
+    setOpenCreateModal(false);
+  }, []);
+
+  const afterProjectCreation = useCallback(function () {
+    getAssignedProjectList();
+  }, []);
+
+  return (
+    <div className="px-20 text-white">
+      <Spinner showSpinner={showSpinner} />
+      <PopupMessage message={popupMessage}></PopupMessage>
+      <CreateProjectModal
+        showModal={openCreateModal}
+        onClose={closeCreateProjectModal}
+        onProjectCreation={afterProjectCreation}
+      ></CreateProjectModal>
+      <div className="flex flex-col w-full h-full">
+        <div className="pt-8">
+          <SearchBar />
         </div>
-    )
+        <div className="pt-8">
+          <ActionBar textToShow="Dashboard">
+            {projectList.length > 0 ? (
+              <Button
+                labelToShow="Create Project"
+                className="button-background-grad"
+                onClick={openCreateProjectModal}
+              />
+            ) : (
+              ""
+            )}
+          </ActionBar>
+        </div>
+        <div className="pt-8">
+          {projectList.length == 0 ? (
+            <WelcomeMessage onClickCallBack={openCreateProjectModal} />
+          ) : (
+            <Table header={heading} rowList={projectList} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
+
+const WelcomeMessage = memo(function WelcomeMessage({ onClickCallBack }) {
+  return (
+    <div className="flex flex-col pt-16">
+      <div className="place-self-center text-3xl font-bold mb-4">
+        Welcome To <span className="welcome-text-color">Agile Mind</span>
+      </div>
+      <div className="place-self-center mb-4">
+        Let's create your first project!
+      </div>
+      <div className="place-self-center">
+        <Button
+          labelToShow="Create Project"
+          className="button-background-grad"
+          onClick={onClickCallBack}
+        />
+      </div>
+    </div>
+  );
+});

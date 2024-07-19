@@ -2,7 +2,7 @@ import "../index.css";
 
 export default function Navbar() {
   return (
-    <nav className="h-screen w-25 bg-neutral-800 text-white px-3 py-8">
+    <nav className="fixed h-full w-25 bg-neutral-800 text-white px-3 py-8">
       <div className="flex flex-col justify-between items-center h-full">
         <div className="">
           <svg
@@ -55,8 +55,8 @@ export default function Navbar() {
           </div>
           <div>
             <img
-              className="w-6 h-6 rounded-full hover:bg-gray-700"
-              src="/docs/images/people/profile-picture-5.jpg"
+              className="w-8 h-8 rounded-full hover:bg-gray-700"
+              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             />
           </div>
         </div>
@@ -64,3 +64,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
