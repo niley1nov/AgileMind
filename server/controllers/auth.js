@@ -57,14 +57,7 @@ async function loginUser(req, res) {
           message: "Your password is incorrect please try again.",
         });
       } else {
-        /*let options = {
-          maxAge: 20 * 60 * 1000, // would expire in 20minutes
-          httpOnly: true, // The cookie is only accessible by the web server
-          secure: true,
-          sameSite: "None",
-        };*/
         const token = loggedInUser.generateJWTToken();
-        //res.cookie("SessionID", token, options);
         res.status(200).json({
           status: "success",
           message: "You have successfully logged in.",

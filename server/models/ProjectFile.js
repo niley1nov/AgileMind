@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {updateProjectSummary} from "../controllers/projectController.js"; 
 
 const projectFileSchema = new mongoose.Schema(
   {
@@ -9,5 +10,12 @@ const projectFileSchema = new mongoose.Schema(
     contentType: {type: String, required: "Content Type is a required field"}
   }
 );
+
+
+//When ProjectFile is saved 
+projectFileSchema.post('save', async function(doc) {
+  const dataText = this.data.toString('utf-8');
+  updateProjectSummary(doc.projectId, dataText);  
+});
 
 export default mongoose.model("projectFiles", projectFileSchema);

@@ -19,6 +19,7 @@ export default function Home() {
     { key: "projectName", label: "Project Name" },
     { key: "startDate", label: "Start Date" },
     { key: "releaseDate", label: "Release Date" },
+    { key: "status", label: "Project Status" },
     { key: "totalPhase", label: "# Phases" }
   ];
 
@@ -39,7 +40,7 @@ export default function Home() {
           setProjectList(
             response.data.map(function (project) {
               project.projectName = (
-                <Link to={"/Project?id=" + project._id} className="text-blue-500 text-sm hover:text-blue-800">
+                <Link to={"/Project/" + project._id} className="text-blue-500 text-sm hover:text-blue-800">
                   {project.projectName}
                 </Link>
               );
@@ -49,7 +50,6 @@ export default function Home() {
         }
       })
       .catch(function (e) {
-        console.log(">>> " + JSON.stringify(e));
         setPopupMessage(e.message);
         setTimeout(function () {
           setPopupMessage("");

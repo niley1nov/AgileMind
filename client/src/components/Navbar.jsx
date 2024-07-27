@@ -1,10 +1,15 @@
 import "../index.css";
+import {useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  function navigateToDashboard(){
+    navigate('/');
+  }
   return (
-    <nav className="fixed h-full w-25 bg-neutral-800 text-white px-3 py-8">
+    <nav className="z-10 fixed h-full w-25 bg-neutral-800 text-white px-3 py-8">
       <div className="flex flex-col justify-between items-center h-full">
-        <div className="">
+        <div className="cursor-pointer">
           <svg
             className="h-8 w-8 hover:bg-gray-700"
             width="24"
@@ -15,6 +20,7 @@ export default function Navbar() {
             fill="none"
             strokeLinejoin="round"
             strokeLinecap="round"
+            onClick={navigateToDashboard}
           >
             <path stroke="none" d="M0 0h24v24H0z" />
             <polyline points="5 12 3 12 12 3 21 12 19 12" />
@@ -23,7 +29,7 @@ export default function Navbar() {
           </svg>
         </div>
         <div className="flex flex flex-col justify-between items-center space-y-7">
-          <div>
+          <div className="cursor-pointer">
             <svg
               className="h-6 w-6 hover:bg-gray-700"
               fill="none"
@@ -38,7 +44,7 @@ export default function Navbar() {
               />
             </svg>
           </div>
-          <div>
+          <div className="cursor-pointer">
             <svg
               className="h-6 w-6 hover:bg-gray-700"
               fill="none"
@@ -53,7 +59,7 @@ export default function Navbar() {
               />
             </svg>
           </div>
-          <div>
+          <div className="cursor-pointer">
             <img
               className="w-8 h-8 rounded-full hover:bg-gray-700"
               src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"

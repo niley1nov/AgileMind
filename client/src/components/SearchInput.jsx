@@ -1,17 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import debounce from "../utils/debounce";
 
 export default function SearchInput(param){
    const [suggestions, setSuggestions] = useState([]);
-   const [selectedUserEmail, setSelectedUserEmail] = useState("");
+   const [inputValue, setInputValue] = useState("");
+   const [isValueSelected, setIsValueSelected] = useState(false);
 
+   useEffect(()=>{
+      setSuggestions([]);
+      setInputValue("");
+      setIsValueSelected(false);
+   },[])
 
-   function searchInDataBase(event){
-      setSelectedUserEmail(event.target.value);
-      setSuggestions([{_id: 'test1', email: 'testEmail1'},{_id: 'test2', email: 'testEmail2'}]);
+   useEffect(()=>{
+      if(!isValueSelected && !param.readOnly){
+         const debouncedSearch = debounce(async function(){
+            if(inputValue){
+               const result = await param.searchInDataBase(inputValue);
+               setSuggestions(result);
+            }else{
+               setSuggestions([]);
+            }
+      
+         },500);
+         debouncedSearch();
+      }
+
+   },[inputValue]);
+
+   function onInputChange(event){
+      setIsValueSelected(false);
+      setInputValue(event.target.value);
    }
 
-   function selectUser(event){
-      setSelectedUserEmail(event.target.innerHTML);
+   function selectValue(event){
+      setIsValueSelected(true);
+      if(param.onSearchSelect){
+         param.onSearchSelect(event.target.innerHTML);
+      }
+      setInputValue(event.target.innerHTML);
       setSuggestions([]);
    }
 
@@ -28,8 +55,10 @@ export default function SearchInput(param){
             name={param.elementName}
             placeholder={param.placeholder}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-transparent"
-            onChange={searchInDataBase}
-            value={selectedUserEmail}
+            onChange={onInputChange}
+            autoComplete="off"
+            value={inputValue}
+            readOnly={param.readOnly}
         />
          <p className="text-xs mt-1">
             {param.supportingText}
@@ -39,9 +68,9 @@ export default function SearchInput(param){
          </p>
          {suggestions.length > 0 && (
         <ul>
-          {suggestions.map((user) => (
-            <li key={user._id} onClick={selectUser} className="rounded-full bg-slate-300 hover:bg-slate-500 text-gray-700 px-4 my-2 cursor-pointer">
-              {user.email}
+          {suggestions.map((suggestion) => (
+            <li key={suggestion.key} onClick={selectValue} className="rounded-full bg-slate-300 hover:bg-slate-500 text-gray-700 px-4 my-2 cursor-pointer">
+              {suggestion.value}
             </li>
           ))}
         </ul>
@@ -49,3 +78,5 @@ export default function SearchInput(param){
      </div>
     );
  }
+
+

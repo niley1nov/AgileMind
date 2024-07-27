@@ -6,7 +6,7 @@ function validateRegistrationDetails(req, res, next) {
     lastName: zod.string(),
     userEmail: zod.string().email(),
     password: zod.string().min(8),
-    contentType: zod.string().refine(
+    role: zod.string().refine(
       (role) => {
         const roleTypes = ["Project Manager", "Developer", "Tester"];
         return roleTypes.includes(role);
@@ -48,7 +48,7 @@ function validateProjectDetails(req, res, next) {
       data: zod.array(zod.number()).transform((arr) => Buffer.from(arr)),
       contentType: zod.string().refine(
         (type) => {
-          const mimeTypes = ["pdf"];
+          const mimeTypes = ["pdf","txt"];
           return mimeTypes.includes(type);
         },
         {
@@ -67,13 +67,59 @@ function validateProjectDetails(req, res, next) {
 }
 
 
-function validateSearchUserPayload(req, res, next){
-  const userSchema = zod.object({
-    userEmail: zod.string(),
-    userRole: zod.string(),
+function validateProjectAssignmentDetails(req, res, next){
+  const projectAssignemtSchema = zod.object({
+    userRole: zod.string().refine(
+      (role) => {
+        const roleTypes = ["Project Manager", "Developer", "Tester"];
+        return roleTypes.includes(role);
+      },
+      {
+        message: "Invalid Role",
+      }
+    ),
+    userEmail: zod.string().email(),
+    startDate: zod.coerce.date(),
+    endDate: zod.coerce.date(),
+    projectId: zod.string()
   });
-  const userDetail = req.body;
-  const result = userSchema.safeParse(userDetail);
+  const projectAssignmetDetails = req.body;
+  const result = projectAssignemtSchema.safeParse(projectAssignmetDetails);
+  if (!result.success) {
+    res.status(422).json({ error: result.error });
+  }
+  next();
+}
+
+
+function validateUpdateAnswersDetails(req, res, next){
+  const questionAnswerSchema = zod.array(
+    zod.object({
+      id: zod.string(),
+      answer: zod.string()
+    })
+  );
+  const questionAnswerDetails = req.body;
+  const result = questionAnswerSchema.safeParse(questionAnswerDetails);
+  if (!result.success) {
+    res.status(422).json({ error: result.error });
+  }
+  next();
+}
+
+function validateSubmitQuestionsDetails(req, res, next){
+  const questionAnswerSchema = zod.object({
+    parentId: zod.string(),
+    type: zod.string(),
+    questions:  zod.array(
+      zod.object({
+        id: zod.string(),
+        answer: zod.string()
+      })
+    )
+  });
+  const questionAnswerDetails = req.body;
+  const result = questionAnswerSchema.safeParse(questionAnswerDetails);
   if (!result.success) {
     res.status(422).json({ error: result.error });
   }
@@ -84,5 +130,7 @@ export {
   validateRegistrationDetails,
   validateLoginDetails,
   validateProjectDetails,
-  validateSearchUserPayload
+  validateProjectAssignmentDetails,
+  validateUpdateAnswersDetails,
+  validateSubmitQuestionsDetails
 };

@@ -1,21 +1,80 @@
 import SelectInput from "../components/SelectInput";
 import SearchInput from "./SearchInput";
+import DateInput from "../components/DateInput";
 import { useForm } from "react-hook-form";
 import {roleOptions} from "../services/selectOptions";
+import { useState } from "react";
+import { apiClientForAuthReq } from "../services/apiService";
+import Spinner from "../components/Spinner";
+import PopupMessage from "../components/PopupMessage";
+import { useParams } from 'react-router-dom';
+
 
 
 
 export default function AssignMemberModal({showModal, onClose}){
-    const {register,formState: { errors }} = useForm();
+    const {register, handleSubmit, formState: { errors }, setValue} = useForm();
+    const [userRole, setUserRole] = useState("");
+    const [popupMessage, setPopupMessage] = useState("");
+    const [showSpinner, setShowSpinner] = useState(false);
+    const { id } = useParams();
+    
 
     if (!showModal) return null;
 
-    function closeModalWindow(){
-        onClose();
+    async function searchForUserInDataBase(userEmail){
+      try{
+        const data = {userEmail: userEmail, userRole: userRole};
+        const response = await apiClientForAuthReq.get("/user/getUserByEmail", {
+          params: data,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if(response.status =="200"){
+          return response.data.map(function(user){
+            return {key: user._id, value: user.userEmail};
+          });
+        }
+      }catch(error){
+        setPopupMessage(error.message);
+        setTimeout(function(){setPopupMessage("")},2000);
+        return [];
       }
+    }
+
+    function closeModalWindow(){
+      onClose();
+    }
+
+    function onRoleChange(event){
+      setUserRole(event.target.value);
+    }
+
+    async function onFormSubmit(data) {
+      try{
+        setShowSpinner(true);
+        data.projectId = id;
+        const response = await apiClientForAuthReq.post("/project/createProjectAssignment", data, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if(response.status == "200"){
+          onClose();
+        }
+      }catch(e){
+        setPopupMessage(e.message);
+        setTimeout(function(){setPopupMessage("")},2000);
+      }finally{
+        setShowSpinner(false);
+      }
+    }
       
     return (
         <div className="fixed inset-0 flex items-center justify-center z-10">
+            <Spinner showSpinner={showSpinner}/>
+            <PopupMessage message={popupMessage}></PopupMessage>
           <div className="bg-black opacity-50"></div>
           <div className="bg-neutral-800 rounded-lg	shadow-xl transform transition-all sm:max-w-lg sm:w-full overflow-hidden overflow-y-auto">
             <div className="px-4 py-5 sm:p-6">
@@ -40,7 +99,9 @@ export default function AssignMemberModal({showModal, onClose}){
                 </svg>
               </button>
               <div className="mt-3 sm:mt-5">
-                <form className="py-8 text-white rounded-md">
+                <form 
+                onSubmit={handleSubmit(onFormSubmit)}
+                className="py-8 text-white rounded-md">
                   <div className="grid grid-cols-1 gap-x-8 gap-y-4">
                     <SelectInput
                         labelToShow="Select Role"
@@ -48,13 +109,29 @@ export default function AssignMemberModal({showModal, onClose}){
                         register={register("userRole", { required: "Required field" })}
                         options={roleOptions}
                         errorToShow={errors.userRole?.message}
+                        onInputChange={onRoleChange}
                     />
                     <SearchInput
                         labelToShow="Select User"
-                        elementName="searchUser"
+                        elementName="userEmail"
                         placeholder="Search by User Email"
-                        register={register("searchUser", { required: "Required field" })}
-
+                        register={register("userEmail", { required: "Required field" })}
+                        searchInDataBase={searchForUserInDataBase}
+                        onSearchSelect={(selectedValue)=>{setValue('userEmail',selectedValue)}}
+                        readOnly={userRole==""}
+                        errorToShow={errors.userEmail?.message}
+                    />
+                     <DateInput
+                      labelToShow="Start Date"
+                      elementName="startDate"
+                      register={register("startDate", { required: "Required field" })}
+                      errorToShow={errors.startDate?.message}
+                    />
+                    <DateInput
+                      labelToShow="End Date"
+                      elementName="endDate"
+                      register={register("endDate", { required: "Required field" })}
+                      errorToShow={errors.endDate?.message}
                     />
                   </div>
                   <center>

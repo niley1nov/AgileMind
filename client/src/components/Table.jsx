@@ -3,7 +3,7 @@ import TableRow from "./TableRow";
 export default function Table({header, rowList}) {
     if(!rowList || rowList.length == 0) return null;
   return (
-    <div>
+    <div className="pb-8">
       <div className="grid grid-flow-col auto-cols-fr w-full pl-2 pr-6 py-6 text-neutral-400">
         {
             header.map(function(heading){

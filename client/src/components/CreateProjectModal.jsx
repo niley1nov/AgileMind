@@ -27,7 +27,6 @@ function CreateProjectModal({showModal, onClose, onProjectCreation}){
         const arrayBuffer = e.target.result;
         fileInfo.data = Array.from(new Uint8Array(arrayBuffer)); 
         createProjectRecord({...data, fileInfo});
-        console.log('>>Payload '+JSON.stringify(fileInfo));
       };
       reader.readAsArrayBuffer(srsFile);
     }catch(e){
@@ -69,7 +68,7 @@ function CreateProjectModal({showModal, onClose, onProjectCreation}){
       <PopupMessage message={popupMessage}></PopupMessage>
       <div className="bg-black opacity-50"></div>
       <div className="bg-neutral-800 rounded-lg	shadow-xl transform transition-all sm:max-w-lg sm:w-full overflow-hidden overflow-y-auto">
-        <div className="px-4 py-5 sm:p-6">
+        <div className="px-4 py-5 sm:p-6 max-h-svh overflow-y-auto">
           <button
             type="button"
             className="absolute top-0 right-0 mt-4 mr-4 text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -113,7 +112,7 @@ function CreateProjectModal({showModal, onClose, onProjectCreation}){
                   labelToShow="SRS File"
                   elementName="srsFile"
                   placeholder="Upload your SRS file here"
-                  accept = ".pdf,.doc,.docx"
+                  accept = ".pdf,.doc,.docx,.txt"
                   register={register("srsFile", { required: "Required field" })}
                   errorToShow={errors.srsFile?.message}
                 />

@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import Home from './pages/Home';
 import ProjectPage from './pages/ProjectPage';
+import QuestionsPage from './pages/QuestionsPage';
 import Layout from './layouts/Layout';
 import GuestLayout from './layouts/GuestLayout';
 
@@ -19,7 +20,8 @@ function App() {
             </Route>
             <Route element={<Layout/>}>
               <Route path='/' element={<Home/>}/>
-              <Route path='/Project' element={<ProjectPage/>}/>
+              <Route path='/Project/:id' element={<ProjectPage/>}/>
+              <Route path='/Questions/:type/:id' element={<QuestionsPage/>}/>
             </Route>
           </Routes>
       </BrowserRouter>
