@@ -17,4 +17,21 @@ const projectSchema = new mongoose.Schema({
 
 });
 
+// Pre hook to capture the previous state of the document
+projectSchema.pre('findOneAndUpdate', async function(next) {
+  this._update.oldDoc = await this.model.findOne(this.getQuery());
+  next();
+});
+
+// Post hook for update operation
+projectSchema.post('findOneAndUpdate', function(doc) {
+  const oldDoc = this._update.oldDoc;
+
+  if (oldDoc && oldDoc.status !== 'Approved' && doc.status === 'Approved') {
+      // Run your custom logic here
+      runYourLogic(doc);
+  }
+});
+
+
 export default mongoose.model("projects", projectSchema);
