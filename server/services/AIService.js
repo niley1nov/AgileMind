@@ -110,7 +110,7 @@ class AIService {
 
     const chatMessageToJsonigy =
       "Convert below document in JSON structure. JSON format - \n" +
-      "[{{feature: name of feature (string), sub_features: [list of sub features] (list of string) }}] " +
+      "[{{feature: name of feature (string), content: content of feature as it is (string) }}] " +
       projectStructureRes.response.text();
     const projectFunStructure = await this.jsonChatSession.sendMessage(
       chatMessageToJsonigy
