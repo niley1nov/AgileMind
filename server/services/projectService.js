@@ -14,6 +14,7 @@ import { DOCUMENT_TYPE } from "../utilities/constant.js";
 async function updateProjectSummaryAndProjectQuestions(projectId, srsText) {
   const service = new AIService();
   const projectSummary = await service.getProjectSummary(srsText);
+  service.initJsonSession(projectSummary);
   const projectQuestions = JSON.parse(
     await service.getProjectLevelQuestions(srsText)
   );
@@ -57,6 +58,7 @@ async function createProjectDocuments(projectId, projSummary) {
   const projectFile = await ProjectFile.findOne({ projectId: projectId });
   const projectSRS = projectFile.data.toString("utf-8");
   const service = new AIService(projSummary);
+  service.initJsonSession(projSummary);
   //Getting project discussion document Functional and Technical both
   const projectDocument = await service.documentProjectDiscussion(
     projectSRS,

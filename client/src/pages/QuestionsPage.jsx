@@ -6,6 +6,7 @@ import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
+import { QUESTION_FUNCTIONAL, QUESTION_TECHNICAL } from "../services/contstant";
 
 export default function QuestionsPage() {
   const {
@@ -29,15 +30,28 @@ export default function QuestionsPage() {
   async function getQuestionList() {
     try {
       setShowSpinner(true);
-      const response = await apiClientForAuthReq.get(
-        "/questions/getProjectLevelQuestions",
-        {
-          params: { projectId: id, type: type },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      let response = {};
+      if(type == QUESTION_FUNCTIONAL || type == QUESTION_TECHNICAL){
+        response = await apiClientForAuthReq.get(
+          "/questions/getProjectLevelQuestions",
+          {
+            params: { projectId: id, type: type },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      }else{
+        response = await apiClientForAuthReq.get(
+          "/questions/getPhaseLevelQuestions",
+          {
+            params: { phaseId: id },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      }
       if (response.status == "200") {
         setQuestionList(response.data);
       }
