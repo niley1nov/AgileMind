@@ -6,6 +6,4 @@ const DOCUMENT_TYPE = { PROJECT_FUN_CHAT : "Project Functional Chat",
         PROJECT_FUN_STRUCT_DETAILED: "Project Functional Structure Detailed",
         PROJECT_TECH_STRUCT: "Project Technical Structure" };
 
-
-
 export {DOCUMENT_TYPE};

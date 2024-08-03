@@ -120,7 +120,7 @@ JSON format -
       chatMessageToJsonify
     );
     let projectFunStructureDetailed = [];
-    for (let feature in JSON.parse(projectFunStructure.response.text())) {
+    for (let feature of JSON.parse(projectFunStructure.response.text())) {
       let promptForDetailedStructure = `Add functional details to this feature based on SRS and Fuctional Discussion Document.
 Ignore technical implementation details for now.
 
@@ -202,7 +202,7 @@ Output JSON format -
     });
 
     let phaseLevelQuestions = []
-    for(let phase in projectTechnicalStructure) {
+    for(let phase of projectTechnicalStructure) {
       const phaseQuestionsRes = await chatSession.sendMessage(JSON.stringify(phase));
       const chatMessageToJsonify = `Convert given questions into JSON format.
 Output JSON format -
@@ -262,7 +262,7 @@ Input (A list of questions for project phase refinement):
     });
 
     const phaseRelatedFunctionalDetails = []
-    for(let phase in projectTechStructure) {
+    for(let phase of projectTechStructure) {
       const filteredDetails = await chatSession.sendMessage(JSON.stringify(phase));
       phaseRelatedFunctionalDetails.push(filteredDetails.response.text())
     }
@@ -382,7 +382,7 @@ Output JSON format -
       epics: []
     };
     let i = 0;
-    for(let epic in phase["epics"]) {
+    for(let epic of phase["epics"]) {
       epicData = {
         name: epic["name"]
       };

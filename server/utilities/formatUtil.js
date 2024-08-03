@@ -7,5 +7,4 @@ function formatDate(date){
   return formattedDate;
 }
 
-
 export {formatDate};

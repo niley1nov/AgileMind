@@ -14,5 +14,4 @@ function getGenConfig(
   };
 }
 
-
 export {getGenConfig};

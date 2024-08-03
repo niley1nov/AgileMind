@@ -63,7 +63,7 @@ async function createProjectDocuments(projectId, projSummary) {
     JSON.stringify(functionalChat),
     JSON.stringify(technicalChat)
   );
-  console.log('>>> projectDoc '+JSON.stringify(projectDocument));
+  console.log('>>> projectDoc ' + JSON.stringify(projectDocument));
 
   //Get Functional Structure and Functional Structure Details
   const {projectFunStructure,projectFunStructureDetailed} = await service.generateFunctionalStructure(
