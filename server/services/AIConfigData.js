@@ -110,7 +110,41 @@ ${replacableText[0]}
 --------------------
 
 Technical Discussion Document:
-${replacableText[1]}`
+${replacableText[1]}`,
+
+    refine_epic: `You are a helpful assistant working on AgileMind Software.
+
+About AgileMind: 
+AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
+
+You will receive a JIRA epic structure. You need to refine the Stories.
+Add detailed description for stories and tasks. You can break down and reorganize stories if neccessary.
+Given epics belong to a single phase. Refer Phase Discussion Document for details.
+Below are some project details and team discussion documents for context.
+Output should be in plain text. Don't use JSON format.
+
+Project Functional Structure:
+${replacableText[0]}
+
+--------------------
+
+Phase related Functional Requirements:
+${replacableText[1]}
+
+--------------------
+
+Technical Discussion Document:
+${replacableText[2]}
+
+--------------------
+
+Phase Discussion Document:
+${replacableText[3]}
+
+--------------------
+
+Phase Notes:
+${replacableText[4]}`
   };
   return prompts[key];
 }
