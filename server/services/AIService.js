@@ -361,8 +361,73 @@ Output JSON format -
     }
   }
 
-  async refineEpic() {
-    
+  async refineEpic(
+    phase,
+    projectFunStructure,
+    phaseRelatedFunctionalDetails,
+    projectTechDiscussionDocument,
+    phaseDiscussionDocument
+  ) {
+    let model = this.genAI.getGenerativeModel({
+      model: models["pro"],
+      systemInstruction: getPrompts("refine_epic", [
+        projectFunStructure,
+        phaseRelatedFunctionalDetails,
+        projectTechDiscussionDocument,
+        phaseDiscussionDocument,
+        phase["notes"].join("\n\n")
+      ]),
+    });
+
+    let chatSession = model.startChat({
+      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      history: phaseRefinementHistory,
+    });
+
+    const phaseData = {
+      name: phase["name"],
+      epics: []
+    };
+    let i = 0;
+    for(let epic in phase["epics"]) {
+      epicData = {
+        name: epic["name"]
+      };
+      const epicStructureText = await chatSession.sendMessage(JSON.stringify(epic), {timeout: 1500});
+      epicData["data"] = epicStructureText.response.text();
+      phaseData["epics"].push(epicData);
+      console.log("Completed epic", i);
+      i++;
+    }
+    console.log("Completed phase");
+    return phaseData;
+  }
+
+  async storyJsonify(
+    epic
+  ) {
+    const chatMessageToJsonify = `Convert below software project epic (` + epic["name"] + `) structure document into JSON structure.
+Output JSON format:
+{{
+	stories: [
+		{{
+			name: story name (string),
+			body: story content (string),
+		}}
+	],
+	notes: list of epic level notes (list of string),
+  dependencies: list of dependencies (list of string),
+}}
+
+` + epic["data"];
+    const epicStructureText = await this.jsonChatSession.sendMessage(
+      chatMessageToJsonify
+    );
+    const epicStructureJSON = JSON.parse(epicStructureText.response.text());
+    epic["stories"] = epicStructureJSON["stories"];
+    epic["notes"] = epicStructureJSON["notes"];
+    epic["dependencies"] = epicStructureJSON["dependencies"];
+    return epic;
   }
 }
 
