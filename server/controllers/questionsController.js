@@ -50,13 +50,21 @@ async function submitQuestions(req, res) {
     const questions = sumbmitDetails.questions;
     await saveAnswersInDataBase(questions,req.user._id);
     if(sumbmitDetails.parentId){
+      const projectId = sumbmitDetails.parentId;
+      const projectDetails = await Project.findOne({_id: projectId});
+      let setObj= {};
       if(sumbmitDetails.type == 'Functional'){
-        let setObj= {isFunctionalInputProvided: true};
-        await Project.findOneAndUpdate({ _id: sumbmitDetails.parentId }, setObj, { new: true });
+        setObj.isFunctionalInputProvided= true;
+        if(projectDetails.isTechnicalInputProvided){
+          setObj.status= 'Input Provided';
+        }
       }else if(sumbmitDetails.type == 'Technical'){
-        let setObj= {isTechnicalInputProvided: true};
-        await Project.findOneAndUpdate({ _id: sumbmitDetails.parentId }, setObj, { new: true });
+        setObj.isTechnicalInputProvided= true;
+        if(projectDetails.isFunctionalInputProvided){
+          setObj.status= 'Input Provided';
+        }
       }
+      await Project.findOneAndUpdate({ _id: projectId }, setObj, { new: true });
     }
     res.status(200).json({
       status: "success",

@@ -11,6 +11,7 @@ const documentSchema = new mongoose.Schema({
         "Project Functional Discussion Document",
         "Project Technical Discussion Document",
         "Project Functional Structure",
+        "Project Functional Structure Detailed",
         "Project Technical Structure"
       ],
       required: "status is a required field",
