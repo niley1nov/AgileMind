@@ -22,8 +22,32 @@ const models = {
   flash: "gemini-1.5-flash",
 };
 
-function getPrompts(key, replacableText=['','']) {
+function getPrompts(key, replacableText=[]) {
   const prompts = {
+    business_model: `You are a product team representative. Your job is to refine project's functional requirements. You will receive a Software Requirement Specification and some functioanl questions related to the project.
+Answer the questions according to you (dummy responses). Keep the response short and concise.
+
+SRS:
+${replacableText[0]}`,
+
+    tech_model: `You are a developer team representative. You will receive a SRS and some technical questions related to the project.
+Answer the questions according to you (dummy responses). Keep the response short and concise.
+
+SRS:
+${replacableText[0]}`,
+
+    answer_model: `You are a assitant working on a software project. You will receive a project context, phase structure and some questions related to the project.
+Answer the questions according to you (dummy responses) by refering to context provided. These answers will help the team in refining the epic and story structure.
+Keep the response short and concise.
+
+Project Functional Structure:
+${replacableText[0]}
+
+--------------------
+
+Project Technical Structure:
+${replacableText[1]}`,
+
     jsonify_model: `You are an assistant working on a software project.
 Your will receive a document and a JSON format. You have to convert it into JSON format.
 Here is the project summary for context:
