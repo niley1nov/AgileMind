@@ -15,6 +15,7 @@ const phaseSchema = new mongoose.Schema({
     default: "Created",
   },
   projectId: { type: mongoose.Schema.Types.ObjectId, required: "Project Id is a required field", ref: "projects"},
+  seqNumber: {type: Number, required: true, min: 1},
 });
 
 export default mongoose.model("phases", phaseSchema);

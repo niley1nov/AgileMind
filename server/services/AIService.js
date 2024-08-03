@@ -161,7 +161,7 @@ Divide the project into phases. Each phase can have analysis, design, developmen
 Don't give numbering to tasks.
 
 Project requirement structure -
-` + JSON.stringify(projectFunStructureDetailed);
+` + projectFunStructureDetailed.join('\n\n');
     const projectStructureRes = await chatSession.sendMessage(chatMessage);
     const chatMessageToJsonify = `Convert below project structure document into JSON structure.
 Output JSON format -
