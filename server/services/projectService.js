@@ -62,13 +62,14 @@ async function createProjectDocuments(projectId, projSummary) {
     JSON.stringify(technicalChat)
   );
   console.log('>>> projectDoc '+JSON.stringify(projectDocument));
-  const functionalStructure = await service.generateFunctionalStructure(
+  const {projectFunStructure,projectFunStructureDetailed} = await service.generateFunctionalStructure(
     projectSRS,
     projectDocument.projectFunDiscussionDocument
   );
-  const technicalStructure = await service.generateTechnicalStructure(
+  const projectTechnicalStructure = await service.generateTechnicalStructure(
     projectSRS,
-    projectDocument.projectFunDiscussionDocument
+    projectDocument.projectFunDiscussionDocument,
+    projectFunStructureDetailed
   );
   const documentList = [
     {
@@ -92,19 +93,24 @@ async function createProjectDocuments(projectId, projSummary) {
       projectId: projectId
     },
     {
-      content: JSON.stringify(functionalStructure),
+      content: JSON.stringify(projectFunStructure),
       docType: DOCUMENT_TYPE.PROJECT_FUN_STRUCT,
       projectId: projectId
     },
     {
-      content: JSON.stringify(technicalStructure),
+      content: JSON.stringify(projectFunStructureDetailed),
+      docType: DOCUMENT_TYPE.PROJECT_FUN_STRUCT_DETAILED,
+      projectId: projectId
+    },
+    {
+      content: JSON.stringify(projectTechnicalStructure),
       docType: DOCUMENT_TYPE.PROJECT_TECH_STRUCT,
       projectId: projectId
     }
   ];
   await Document.insertMany(documentList);
   console.log('>>>>Document Inserted');
-  await createPhaseRecords(projectId, technicalStructure);
+  await createPhaseRecords(projectId, projectTechnicalStructure);
   console.log('>>>>Phase Inserted');
 }
 
@@ -113,8 +119,8 @@ async function createPhaseRecords(projectId, technicalStructure){
   const phaseList = technicalStructure.map(function(record){
     return {phaseName: record.phase, projectId: projectId};
   });
-
   await Phase.insertMany(phaseList);
+  await Project.findOneAndUpdate({ _id: projectId }, {status: "In Progress"}, { new: true });
 }
 
 export { updateProjectSummaryAndProjectQuestions, createProjectDocuments };

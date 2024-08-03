@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.js";
 import projectRouter from "./routes/projectRouter.js";
 import userRouter from "./routes/userRouter.js";
 import questionsRouter from "./routes/questionsRouter.js";
+import phaseRouter from "./routes/phaseRouter.js";
 import cookieParser from "cookie-parser";
 
 
@@ -23,6 +24,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/project",projectRouter);
 app.use("/api/user",userRouter);
 app.use("/api/questions",questionsRouter);
+app.use("/api/phase",phaseRouter);
 
 
 
