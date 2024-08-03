@@ -51,11 +51,11 @@ async function submitQuestions(req, res) {
     await saveAnswersInDataBase(questions,req.user._id);
     if(sumbmitDetails.parentId){
       if(sumbmitDetails.type == 'Functional'){
-        let setObj= { $set: { isFunctionalInputProvided: true } };
-        await Project.updateOne({ _id: sumbmitDetails.parentId }, setObj);
+        let setObj= {isFunctionalInputProvided: true};
+        await Project.findOneAndUpdate({ _id: sumbmitDetails.parentId }, setObj, { new: true });
       }else if(sumbmitDetails.type == 'Technical'){
-        let setObj= { $set: { isTechnicalInputProvided: true } };
-        await Project.updateOne({ _id: sumbmitDetails.parentId }, setObj);
+        let setObj= {isTechnicalInputProvided: true};
+        await Project.findOneAndUpdate({ _id: sumbmitDetails.parentId }, setObj, { new: true });
       }
     }
     res.status(200).json({
@@ -65,7 +65,7 @@ async function submitQuestions(req, res) {
   } catch (err) {
     res.status(500).json({
       status: "error",
-      message: "Internal Server Error " + err.message,
+      message: "Internal Server Error sddsf " + err.message,
     });
   }
 }

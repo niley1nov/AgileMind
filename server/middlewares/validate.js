@@ -62,7 +62,6 @@ function validateProjectDetails(req, res, next) {
   if (!result.success) {
     res.status(422).json({ error: result.error });
   }
-  console.log()
   next();
 }
 

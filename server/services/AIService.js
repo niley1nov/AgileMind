@@ -116,7 +116,7 @@ class AIService {
       chatMessageToJsonigy
     );
     let projectFunStructureDetailed = [];
-    for (let feature in projectFunStructure.response) {
+    for (let feature in  JSON.parse(projectFunStructure.response.text())) {
       let promtForDetailsStructure =
         "Add functional details to this feature based on SRS and Fuctional Discussion Document. Ignore technical implementation details for now.\n" +
         "Feature - " +
@@ -127,7 +127,7 @@ class AIService {
       projectFunStructureDetailed.push(projectStructureRes.response.text());
     }
 
-    return projectFunStructureDetailed;
+    return {projectFunStructure: JSON.parse(projectFunStructure), projectFunStructureDetailed : projectFunStructureDetailed};
   }
 
   async generateTechnicalStructure(
@@ -162,7 +162,7 @@ class AIService {
     const projectTechnicalStructure = await this.jsonChatSession.sendMessage(
       chatMessageToJsonigy
     );
-    return projectTechnicalStructure.response;
+    return JSON.parse(projectTechnicalStructure.response.text());
   }
 
 

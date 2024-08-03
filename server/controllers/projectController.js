@@ -174,7 +174,6 @@ async function getProjectAssignments(req, res) {
         },
       },
     ]);
-    console.log('>>> '+results);
     res.status(200).json(results);
   } catch (err) {
     res.status(500).json({
@@ -189,51 +188,10 @@ async function saveSRSFile(fileToSave) {
   await newFile.save();
 }
 
-async function updateProjectSummary(projectId, srsText) {
-  const service = new AIService();
-  const projectSummary = await service.getProjectSummary(srsText);
-  const projectQuestions = JSON.parse(
-    await service.getProjectLevelQuestions(srsText)
-  );
-
-  const functionalQuestions = projectQuestions["functional"].map(function (
-    question,
-    index
-  ) {
-    return new ProjectQuestion({
-      seqNumber: index + 1,
-      question: question,
-      projectId: projectId,
-      type: "Functional",
-    });
-  });
-
-  const technicalQuestions = projectQuestions["technical"].map(function (
-    question,
-    index
-  ) {
-    return new ProjectQuestion({
-      seqNumber: index + 1,
-      question: question,
-      projectId: projectId,
-      type: "Technical",
-    });
-  });
-  await ProjectQuestion.insertMany([
-    ...functionalQuestions,
-    ...technicalQuestions,
-  ]);
-  await Project.updateOne(
-    { _id: projectId },
-    { projectSummary: projectSummary, status: "Waiting for Input" }
-  );
-}
-
 export {
   createProject,
   getAssignedProjectList,
   createProjectAssignment,
-  updateProjectSummary,
   getPhaseList,
   getProjectAssignments,
 };
