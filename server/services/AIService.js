@@ -401,16 +401,16 @@ Output JSON format -
   ) {
     const chatMessageToJsonify = `Convert below software project epic (` + epic["name"] + `) structure document into JSON structure.
 Output JSON format:
-{{
+{
 	stories: [
-		{{
+		{
 			name: story name (string),
-			body: story content (string),
-		}}
+			body: story content including tasks, description and acceptance criteria as text (string),
+		}
 	],
 	notes: list of epic level notes (list of string),
   dependencies: list of dependencies (list of string),
-}}
+}
 
 ` + epic["data"];
     const epicStructureText = await this.jsonChatSession.sendMessage(
