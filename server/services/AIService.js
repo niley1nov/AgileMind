@@ -5,34 +5,24 @@ import {
 } from "@google/generative-ai";
 import { models, getPrompts } from "./AIConfigData.js";
 import config from "../config.js";
+import { getGenConfig } from "../utilities/AIUtil.js";
 
 class AIService {
-  constructor(projectSummary = "") {
+  constructor() {
     this.genAI = new GoogleGenerativeAI(config.GEMINI_API_TOKEN);
-    this.jsonifyModel = this.genAI.getGenerativeModel({
-      model: models["pro"],
-      systemInstruction: getPrompts("jsonify_model", projectSummary),
-    });
-    this.jsonChatSession = this.jsonifyModel.startChat({
-      generationConfig: this.getGenConfig(0.2, "application/json"),
-      history: [],
-    });
+    this.jsonifyModel = {};
+    this.jsonChatSession = {};
   }
 
-  getGenConfig(
-    temperature,
-    response_mime_type,
-    max_output_tokens = 8192,
-    top_p = 0.95,
-    top_k = 64
-  ) {
-    return {
-      temperature: temperature,
-      topP: top_p,
-      topK: top_k,
-      maxOutputTokens: max_output_tokens,
-      responseMimeType: response_mime_type,
-    };
+  initJsonSession(projectSummary) {
+    this.jsonifyModel = this.genAI.getGenerativeModel({
+      model: models["pro"],
+      systemInstruction: getPrompts("jsonify_model", [projectSummary]),
+    });
+    this.jsonChatSession = this.jsonifyModel.startChat({
+      generationConfig: getGenConfig(0.2, "application/json"),
+      history: [],
+    });
   }
 
   async getProjectSummary(srs) {
@@ -41,7 +31,7 @@ class AIService {
       systemInstruction: getPrompts("project_summary"),
     });
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(1, "text/plain"),
+      generationConfig: getGenConfig(1, "text/plain"),
       history: [],
     });
     const result = await chatSession.sendMessage(srs);
@@ -54,7 +44,7 @@ class AIService {
       systemInstruction: getPrompts("questions_from_SRS"),
     });
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.8, "text/plain", 16384),
+      generationConfig: getGenConfig(0.8, "text/plain", 16384),
       history: [],
     });
 
@@ -85,11 +75,11 @@ Input (A list of questions for project refinement):
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.4, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.4, "text/plain", 16384, 0.95, 64),
       history: [],
     });
-    const resultFunDoc = await chatSession.sendMessage(projectFunChat);
-    const resultTechDoc = await chatSession.sendMessage(projectTechChat);
+    const resultFunDoc = await chatSession.sendMessage(JSON.stringify(projectFunChat));
+    const resultTechDoc = await chatSession.sendMessage(JSON.stringify(projectTechChat));
     return {
       projectFunDiscussionDocument: resultFunDoc.response.text(),
       projectTechDiscussionDocument: resultTechDoc.response.text(),
@@ -106,7 +96,7 @@ Input (A list of questions for project refinement):
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.5, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.5, "text/plain", 16384, 0.95, 64),
       history: [],
     });
 
@@ -162,7 +152,7 @@ Feature -
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
       history: [],
     });
 
@@ -201,13 +191,13 @@ Output JSON format -
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("questions_from_phase", [
-        projectFunStructureDetailed,
-        projectTechnicalStructure,
+        projectFunStructureDetailed.join("\n\n"),
+        JSON.stringify(projectTechnicalStructure),
       ]),
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.8, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.8, "text/plain", 16384, 0.95, 64),
       history: [],
     });
 
@@ -247,7 +237,7 @@ Input (A list of questions for project phase refinement):
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
       history: [],
     });
 
@@ -262,12 +252,12 @@ Input (A list of questions for project phase refinement):
 		let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("filter_phase_related_information", [
-        projectFunStructureDetailed
+        projectFunStructureDetailed.join("\n\n")
       ]),
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
       history: [],
     });
 
@@ -316,13 +306,13 @@ Input (A list of questions for project phase refinement):
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("refine_phase", [
-        projectFunStructureDetailed,
+        projectFunStructureDetailed.join("\n\n"),
         projectTechDiscussionDocument
       ]),
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
       history: phaseRefinementHistory,
     });
 
@@ -374,16 +364,16 @@ Output JSON format -
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("refine_epic", [
-        projectFunStructure,
+        JSON.stringify(projectFunStructure),
         phaseRelatedFunctionalDetails,
         projectTechDiscussionDocument,
         phaseDiscussionDocument,
-        phase["notes"].join("\n\n")
+        phase["notes"].join("\n")
       ]),
     });
 
     let chatSession = model.startChat({
-      generationConfig: this.getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
       history: phaseRefinementHistory,
     });
 
