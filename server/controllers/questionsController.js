@@ -28,6 +28,31 @@ async function getProjectLevelQuestions(req, res) {
   }
 }
 
+async function getPhaseLevelQuestions(req, res) {
+  try {
+    const phaseId = req.query.phaseId;
+
+    if (!phaseId) {
+      res.status(422).json({
+        status: "error",
+        message: "Query Parameters are not correct",
+      });
+    } else {
+      const questionsList = await ProjectQuestion.find({
+        phaseId: phaseId
+      })
+        .select("_id question seqNumber answer type answerGivenBy")
+        .sort({ seqNumber: 1 });
+      res.json(questionsList);
+    }
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error " + err.message,
+    });
+  }
+}
+
 async function updateAnswers(req, res) {
   try {
     const questions = req.body;
@@ -94,4 +119,4 @@ async function saveAnswersInDataBase(questions, userId){
   await ProjectQuestion.bulkWrite(bulkOps);
 }
 
-export { getProjectLevelQuestions, updateAnswers, submitQuestions };
+export { getProjectLevelQuestions, getPhaseLevelQuestions, updateAnswers, submitQuestions };

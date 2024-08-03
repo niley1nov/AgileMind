@@ -51,7 +51,7 @@ export default function PhasePage(){
       }catch(error){
         setPopupMessage(error.message);
         setTimeout(function(){setPopupMessage("")},2000);
-        //navigate("/login");
+        navigate("/login");
         return [];
       }finally{
         setShowSpinner(false);
@@ -87,7 +87,7 @@ const PhasePageMessage = memo(function PhasePageMessage({phaseStatus, phaseId}) 
   const navigate = useNavigate();
 
   function redirectToQuestionPage(){
-    navigate('/Questions/'+phaseId);
+    navigate('/Questions/PhaseQuestions/'+phaseId);
   }
 
   if(phaseStatus === PROJECT_STATUS_CREATED){
