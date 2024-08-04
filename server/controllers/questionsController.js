@@ -1,5 +1,7 @@
 import ProjectQuestion from "../models/ProjectQuestion.js";
 import Project from "../models/Project.js";
+import Phase from "../models/Phase.js";
+import { QUESTION_TYPE } from "../utilities/constant.js";
 
 async function getProjectLevelQuestions(req, res) {
   try {
@@ -39,7 +41,7 @@ async function getPhaseLevelQuestions(req, res) {
       });
     } else {
       const questionsList = await ProjectQuestion.find({
-        phaseId: phaseId
+        phaseId: phaseId,
       })
         .select("_id question seqNumber answer type answerGivenBy")
         .sort({ seqNumber: 1 });
@@ -56,7 +58,7 @@ async function getPhaseLevelQuestions(req, res) {
 async function updateAnswers(req, res) {
   try {
     const questions = req.body;
-    await saveAnswersInDataBase(questions,req.user._id);
+    await saveAnswersInDataBase(questions, req.user._id);
     res.status(200).json({
       status: "success",
       message: "Updated answers successfully",
@@ -73,23 +75,37 @@ async function submitQuestions(req, res) {
   try {
     const sumbmitDetails = req.body;
     const questions = sumbmitDetails.questions;
-    await saveAnswersInDataBase(questions,req.user._id);
-    if(sumbmitDetails.parentId){
+    await saveAnswersInDataBase(questions, req.user._id);
+    if (
+      sumbmitDetails.parentId &&
+      (sumbmitDetails.type == QUESTION_TYPE.FUNCTIONAL ||
+        sumbmitDetails.type == QUESTION_TYPE.TECHNICAL)
+    ) {
       const projectId = sumbmitDetails.parentId;
-      const projectDetails = await Project.findOne({_id: projectId});
-      let setObj= {};
-      if(sumbmitDetails.type == 'Functional'){
-        setObj.isFunctionalInputProvided= true;
-        if(projectDetails.isTechnicalInputProvided){
-          setObj.status= 'Input Provided';
+      const projectDetails = await Project.findOne({ _id: projectId });
+      let setObj = {};
+      if (sumbmitDetails.type == QUESTION_TYPE.FUNCTIONAL) {
+        setObj.isFunctionalInputProvided = true;
+        if (projectDetails.isTechnicalInputProvided) {
+          setObj.status = "Input Provided";
         }
-      }else if(sumbmitDetails.type == 'Technical'){
-        setObj.isTechnicalInputProvided= true;
-        if(projectDetails.isFunctionalInputProvided){
-          setObj.status= 'Input Provided';
+      } else if (sumbmitDetails.type == QUESTION_TYPE.TECHNICAL) {
+        setObj.isTechnicalInputProvided = true;
+        if (projectDetails.isFunctionalInputProvided) {
+          setObj.status = "Input Provided";
         }
       }
       await Project.findOneAndUpdate({ _id: projectId }, setObj, { new: true });
+    } else if (
+      sumbmitDetails.parentId &&
+      sumbmitDetails.type == QUESTION_TYPE.PHASE_LEVEL
+    ) {
+      const phaseId = sumbmitDetails.parentId;
+      await Phase.findOneAndUpdate(
+        { _id: phaseId },
+        { status: "Input Provided" },
+        { new: true }
+      );
     }
     res.status(200).json({
       status: "success",
@@ -103,8 +119,8 @@ async function submitQuestions(req, res) {
   }
 }
 
-async function saveAnswersInDataBase(questions, userId){
-  let bulkOps = questions.map(question => {
+async function saveAnswersInDataBase(questions, userId) {
+  let bulkOps = questions.map((question) => {
     return {
       updateOne: {
         filter: { _id: question.id },
@@ -112,11 +128,16 @@ async function saveAnswersInDataBase(questions, userId){
           answer: question.answer,
           answerGivenBy: userId,
         },
-        upsert: false 
-      }
+        upsert: false,
+      },
     };
   });
   await ProjectQuestion.bulkWrite(bulkOps);
 }
 
-export { getProjectLevelQuestions, getPhaseLevelQuestions, updateAnswers, submitQuestions };
+export {
+  getProjectLevelQuestions,
+  getPhaseLevelQuestions,
+  updateAnswers,
+  submitQuestions,
+};
