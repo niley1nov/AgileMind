@@ -4,7 +4,7 @@ import {
   import { models, getPrompts } from "./AIConfigData.js";
   import config from "../config.js";
 
-  class businessService {
+  class answerService {
     constructor(
         projectFunStructureDetailed,
         projectTechnicalStructure

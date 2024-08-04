@@ -405,7 +405,13 @@ Output JSON format:
 	stories: [
 		{
 			name: story name (string),
-			body: story content including tasks, description and acceptance criteria as text (string),
+            description: story description (string),
+            tasks: [
+                {
+                    name: task name (string),
+                    description: task description (string),
+                }
+            ]
 		}
 	],
 	notes: list of epic level notes (list of string),
