@@ -52,8 +52,8 @@ class AIService {
     const prompt = `Convert given questions into JSON format.
 Output JSON format:
 {
-	functional: [functional questions for product team] (list of string),
-	technical: [technical questions for development team] (list of string)
+  functional: [functional questions for product team] (list of string),
+  technical: [technical questions for development team] (list of string)
 }
 
 Input (A list of questions for project refinement):
@@ -63,10 +63,10 @@ Input (A list of questions for project refinement):
   }
 
   async documentProjectDiscussion(
-		projectSRS,
-		projectFunChat,
-		projectTechChat
-	) {
+    projectSRS,
+    projectFunChat,
+    projectTechChat
+  ) {
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("document_project_level_discussion", [
@@ -109,10 +109,10 @@ Don't add technical details for now. Don't give numbering to tasks.`;
     const chatMessageToJsonify = `Convert below document in JSON structure.
 JSON format -
 [
-	{
-		feature: name of feature (string)
-		content: content of feature as it is (string)
-	}
+  {
+    feature: name of feature (string)
+    content: content of feature as it is (string)
+  }
 ]
 
 ` + projectStructureRes.response.text();
@@ -166,15 +166,15 @@ Project requirement structure -
     const chatMessageToJsonify = `Convert below project structure document into JSON structure.
 Output JSON format -
 [
-	{
-		phase: phase name (string)
-		sections: [
-			{
-				type: [] list of task types (list of string) example: [Analysis, Design]
-				tasks: [] list of tasks (list of string)
-			}
-		]
-	}
+  {
+    phase: phase name (string)
+    sections: [
+      {
+        type: [] list of task types (list of string) example: [Analysis, Design]
+        tasks: [] list of tasks (list of string)
+      }
+    ]
+  }
 ]
 
 ` + projectStructureRes.response.text();
@@ -224,12 +224,12 @@ Input (A list of questions for project phase refinement):
     return phaseLevelQuestions;
   }
 
-	async documentPhaseDiscussion(
-		projectSummary,
-		phase,
-		phaseChat
-	) {
-		let model = this.genAI.getGenerativeModel({
+  async documentPhaseDiscussion(
+    projectSummary,
+    phase,
+    phaseChat
+  ) {
+    let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("document_phase_level_discussion", [
         projectSummary
@@ -241,15 +241,15 @@ Input (A list of questions for project phase refinement):
       history: [],
     });
 
-		const phaseDiscussionDocument = await chatSession.sendMessage(phase['phase'] + "\n\n" + JSON.stringify(phaseChat));
-		return phaseDiscussionDocument.response.text();
-	}
+    const phaseDiscussionDocument = await chatSession.sendMessage(phase['phase'] + "\n\n" + JSON.stringify(phaseChat));
+    return phaseDiscussionDocument.response.text();
+  }
 
-	async filterPhaseInformation(
-		projectFunStructureDetailed,
+  async filterPhaseInformation(
+    projectFunStructureDetailed,
     projectTechStructure
-	) {
-		let model = this.genAI.getGenerativeModel({
+  ) {
+    let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("filter_phase_related_information", [
         projectFunStructureDetailed.join("\n\n")
@@ -267,7 +267,7 @@ Input (A list of questions for project phase refinement):
       phaseRelatedFunctionalDetails.push(filteredDetails.response.text())
     }
     return phaseRelatedFunctionalDetails;
-	}
+  }
 
   async preparePhaseRefinementHistory(
     phases,
@@ -324,18 +324,18 @@ Remove unnecessary prefix like Story 2.1, Epic 1, Task 3, Phase 1. Keep the actu
 Output JSON format -
 {
   name: phase name (string)
-	epics: [
-		{
-			name: epic name (string)
-			stories: [
-				{
-					name: story name (string)
-					tasks: [] list of tasks (list of string)
-				}
-			]
-		}
-	],
-	notes: [] additional information or phase level notes (list of string)
+  epics: [
+    {
+      name: epic name (string)
+      stories: [
+        {
+          name: story name (string)
+          tasks: [] list of tasks (list of string)
+        }
+      ]
+    }
+  ],
+  notes: [] additional information or phase level notes (list of string)
 }
 
 ` + phaseStructureText.response.text();
@@ -402,19 +402,14 @@ Output JSON format -
     const chatMessageToJsonify = `Convert below software project epic (` + epic["name"] + `) structure document into JSON structure.
 Output JSON format:
 {
-	stories: [
-		{
-			name: story name (string),
-            description: story description (string),
-            tasks: [
-                {
-                    name: task name (string),
-                    description: task description (string),
-                }
-            ]
-		}
-	],
-	notes: list of epic level notes (list of string),
+  stories: [
+    {
+      name: story name (string),
+      description: story description (string),
+      tasks: story tasks as it is (string)
+    }
+  ],
+  notes: list of epic level notes (list of string),
   dependencies: list of dependencies (list of string),
 }
 
