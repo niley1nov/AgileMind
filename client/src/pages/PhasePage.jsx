@@ -87,7 +87,7 @@ const PhasePageMessage = memo(function PhasePageMessage({phaseStatus, phaseId}) 
   const navigate = useNavigate();
 
   function redirectToQuestionPage(){
-    navigate('/Questions/PhaseQuestions/'+phaseId);
+    navigate('/Questions/Phase/'+phaseId);
   }
 
   if(phaseStatus === PROJECT_STATUS_CREATED){

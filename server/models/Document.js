@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 
 const documentSchema = new mongoose.Schema({
-    projectId: { type: mongoose.Schema.Types.ObjectId, required: "Project Id is a required field", ref: "projects"},
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "projects"},
+    phaseId: { type: mongoose.Schema.Types.ObjectId, ref: "phases"},
     docType: {
       type: String,
       enum: [
@@ -12,7 +13,11 @@ const documentSchema = new mongoose.Schema({
         "Project Technical Discussion Document",
         "Project Functional Structure",
         "Project Functional Structure Detailed",
-        "Project Technical Structure"
+        "Project Technical Structure",
+        "Phase Functional Structure Detailed",
+        "Phase Discussion Document",
+        "Phase Structure Text",
+        "Phase Refined"
       ],
       required: "status is a required field",
     },

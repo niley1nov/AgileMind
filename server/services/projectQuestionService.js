@@ -17,6 +17,13 @@ async function getTechnicalChat(projectId){
     })
 }
 
+async function getPhaseChat(phaseId){
+    const questionList = await ProjectQuestion.find({phaseId: phaseId,type: 'Phase'});
+    return questionList.map(function(pq){
+        return {question: pq.question, answer: pq.answer};
+    })
+}
+
 async function createPhaseLevelQuestions(phaseList, phaseLevelQuestionList){
     if(phaseList.length != phaseLevelQuestionList.length){
         throw "Some error occur due to Phase size is not equal to question list";
@@ -31,7 +38,7 @@ async function createPhaseLevelQuestions(phaseList, phaseLevelQuestionList){
                 seqNumber: index + 1,
                 question: q.question,
                 phaseId: phase._id,
-                type: "Phase Level Question",
+                type: "Phase",
                 subtype: q.roles.join(',')
               });
         });
@@ -48,4 +55,4 @@ async function createPhaseLevelQuestions(phaseList, phaseLevelQuestionList){
 }
 
 
-export {getFunctionalChat, getTechnicalChat, createPhaseLevelQuestions};
+export {getFunctionalChat, getTechnicalChat, getPhaseChat, createPhaseLevelQuestions};

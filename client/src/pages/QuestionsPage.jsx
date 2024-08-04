@@ -6,7 +6,7 @@ import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
-import { QUESTION_FUNCTIONAL, QUESTION_TECHNICAL } from "../services/contstant";
+import { QUESTION_FUNCTIONAL, QUESTION_TECHNICAL,QUESTION_PHASE } from "../services/contstant";
 
 export default function QuestionsPage() {
   const {
@@ -80,7 +80,8 @@ export default function QuestionsPage() {
             }
         });
         if(response.status =="200"){
-            navigate('/Project/'+id);
+            const linkToNavigate = type == QUESTION_PHASE ? '/Phase/' : '/Project/';
+            navigate(linkToNavigate+id);
         }
     }catch(e){
         setPopupMessage(e.message);
@@ -106,7 +107,8 @@ export default function QuestionsPage() {
             }
         });
         if(response.status =="200"){
-            navigate('/Project/'+id);
+          const linkToNavigate = type == QUESTION_PHASE ? '/Phase/' : '/Project/';
+            navigate(linkToNavigate+id);
         }
     }catch(e){
         setPopupMessage(e.message);

@@ -7,7 +7,7 @@ const projectQuestionSchema = new mongoose.Schema({
   answerGivenBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users'  },
   type: {
     type: String,
-    enum: ["Technical","Functional","Phase Level Question"],
+    enum: ["Technical","Functional","Phase"],
     required: "type is a required field"
   },
   subtype: {type: String},

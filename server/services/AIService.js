@@ -224,12 +224,13 @@ Input (A list of questions for project phase refinement):
     return phaseLevelQuestions;
   }
 
-  async documentPhaseDiscussion(
-    projectSummary,
-    phase,
-    phaseChat
-  ) {
-    let model = this.genAI.getGenerativeModel({
+  //This method will give a text response - for Phase discussion document
+	async documentPhaseDiscussion(
+		projectSummary,
+		phase,
+		phaseChat
+	) {
+		let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("document_phase_level_discussion", [
         projectSummary
@@ -269,7 +270,7 @@ Input (A list of questions for project phase refinement):
     return phaseRelatedFunctionalDetails;
   }
 
-  async preparePhaseRefinementHistory(
+  preparePhaseRefinementHistory(
     phases,
     phaseDiscussionDocuments,
     phaseStructureTexts
@@ -342,6 +343,8 @@ Output JSON format -
       const phaseStructureJSON = await this.jsonChatSession.sendMessage(
         chatMessageToJsonify
       );
+      console.log('>>>> AISERVICE phaseStructureText '+phaseStructureText.response.text());
+      console.log('>>>> AISERVICE phaseStructureJSON '+phaseStructureJSON.response.text());
       return {
         phaseStructureText: phaseStructureText.response.text(),
         phaseStructureJSON: JSON.parse(phaseStructureJSON.response.text())
@@ -374,7 +377,7 @@ Output JSON format -
 
     let chatSession = model.startChat({
       generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
-      history: phaseRefinementHistory,
+      history: [],
     });
 
     const phaseData = {
@@ -383,7 +386,7 @@ Output JSON format -
     };
     let i = 0;
     for(let epic of phase["epics"]) {
-      epicData = {
+      let epicData = {
         name: epic["name"]
       };
       const epicStructureText = await chatSession.sendMessage(JSON.stringify(epic), {timeout: 1500});
@@ -421,6 +424,7 @@ Output JSON format:
     epic["stories"] = epicStructureJSON["stories"];
     epic["notes"] = epicStructureJSON["notes"];
     epic["dependencies"] = epicStructureJSON["dependencies"];
+    console.log('>>>> EPIC FROM AI CLASS '+epic);
     return epic;
   }
 }
