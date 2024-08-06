@@ -52,12 +52,10 @@ export default function StoryPage(){
     function toMarkdown(text) {
         if(!text) return text;
 
-        console.log(text);
         text = text.trim();
         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         text = text.replace(/\n/g, '<br>');
         text = text.replace(/\*/g, '&emsp;&#8226');
-        console.log(text);
 
         return `<p>${text}</p>`; 
     }
