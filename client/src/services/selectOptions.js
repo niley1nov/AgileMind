@@ -12,6 +12,21 @@ const storyStatusOptions = [
     { value: "Blocked", label: "Blocked" },
     { value: "Backlog", label: "Backlog" },
     { value: "Completed", label: "Completed" },
-]
+];
 
-export {roleOptions, storyStatusOptions};
+const storyConfidenceOption = [
+    { value: "High", label: "High" },
+    { value: "Medium", label: "Medium" },
+    { value: "Low", label: "Low" },
+
+];
+
+const moscowOptions = [
+    { value: "Must Have", label: "Must Have" },
+    { value: "Should Have", label: "Should Have" },
+    { value: "Could Have", label: "Could Have" },
+    { value: "Won't Have", label: "Won't Have" },
+
+];
+
+export {roleOptions, storyStatusOptions, storyConfidenceOption, moscowOptions};

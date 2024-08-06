@@ -1,12 +1,12 @@
-export default function TextAreaInput(param){
+export default function NumberInput(param){
     return (
         <div className={param.className}>
             <label htmlFor={param.elementName} className="block text-sm font-medium mb-1">
               {param.labelToShow}
             </label>
-            <textarea
+            <input
               {...param.register}
-              type="text"
+              type="number"
               name={param.elementName}
               placeholder={param.placeholder}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-transparent"

@@ -1,10 +1,18 @@
+import { useEffect } from "react";
+
 export default function SelectInput(param){
+
+    useEffect(function(){
+        document.getElementById(`selectInput-${param.elementName}`).disabled = (param.readOnly === true);
+    },[param]);
+
     return (
         <div className={param.className}>
             <label htmlFor={param.elementName} className="block text-sm font-medium mb-1">
               {param.labelToShow}
             </label>
             <select
+                id={`selectInput-${param.elementName}`}
                 {...param.register}
                 name={param.elementName}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-transparent"
