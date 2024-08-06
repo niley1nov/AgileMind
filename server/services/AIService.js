@@ -536,7 +536,11 @@ Output JSON format:
       JSON.stringify(inputStories)
     );
     const dependencies = JSON.parse(dependenciesText.response.text());
-    return dependencies;
+    const dependsOn = {};
+    for(let story of dependencies) {
+      dependsOn[story.story] = story.dependencies;
+    }
+    return dependsOn;
   }
 }
 
