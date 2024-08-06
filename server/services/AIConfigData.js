@@ -226,23 +226,49 @@ MoSCoW: Story Priority. Output can be Must Have, Should Have, Could Have, Won't 
 Output should be plain text, don't generate JSON output.
 Below are some details about the project, phase and epic.
 
-Epic Structure:
+Epic Stories:
 ${replacableText[0]}
 
 --------------------
 
-Technical Discussion Document:
+Epic Notes:
 ${replacableText[1]}
 
 --------------------
 
-Phase Discussion Document:
+Technical Discussion Document:
 ${replacableText[2]}
 
 --------------------
 
+Phase Discussion Document:
+${replacableText[3]}
+
+--------------------
+
 Phase Related Functional Requirements:
-${replacableText[3]}`
+${replacableText[4]}`,
+
+    calculate_dependencies: `You are a helpful assistant that work on JIRA software to refine and groom user stories, epics, phases and overall project structure.
+
+You will receive a list of stories from "${replacableText[0]}" epic as input. You need to analyze dependencies between all epic stories and find the output fill dependencies filed in input JSON.
+
+A finish-to-start (FS) dependency is the most common type of relationship between tasks in project management. It means that a task (the successor) cannot start until another task (the predecessor) is finished.
+There can be multiple stories in output list.
+
+Output JSON format:
+[
+	{
+		story: story name (string),
+		dependencies: [] list of stories that depends on given story (list of string)
+	}
+]
+
+Below is the epic strucure,
+
+${replacableText[1]}
+
+${replacableText[2]}`
   };
   return prompts[key];
 }

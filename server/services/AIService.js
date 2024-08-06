@@ -470,7 +470,8 @@ Output JSON format:
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("refactor_story", [
-        JSON.stringify(epic["data"]),
+        JSON.stringify(epic["stories"]),
+        epic["notes"].join("\n"),
         projectTechDiscussionDocument,
         phaseDiscussionDocument,
         phaseRelatedFunctionalDetails
@@ -478,7 +479,7 @@ Output JSON format:
     });
 
     let chatSession = model.startChat({
-      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      generationConfig: getGenConfig(0.3, "application/json", 16384, 0.95, 64),
       history: [],
     });
 
@@ -506,6 +507,36 @@ Output JSON format:
     );
     const newStories = JSON.parse(jsonResponse.response.text());
     return newStories;
+  }
+
+  async calculateDependencies() {
+    let model = this.genAI.getGenerativeModel({
+      model: models["pro"],
+      systemInstruction: getPrompts("calculate_dependencies", [
+        epic["name"],
+        JSON.stringify(epic["stories"]),
+        epic["notes"].join("\n")
+      ]),
+    });
+
+    let chatSession = model.startChat({
+      generationConfig: getGenConfig(0.2, "application/json", 16384, 0.95, 64),
+      history: [],
+    });
+
+    inputStories = [];
+    for(let story of epic["stories"]) {
+      inputStories.push({
+        story: story["name"],
+        dependencies: []
+      })
+    }
+
+    const dependenciesText = await chatSession.sendMessage(
+      JSON.stringify(inputStories)
+    );
+    const dependencies = JSON.parse(dependenciesText.response.text());
+    return dependencies;
   }
 }
 
