@@ -527,23 +527,30 @@ Output JSON format:
     });
 
     inputStories = [];
+    storyPoints = {};
     for(let story of epic["stories"]) {
       inputStories.push({
         story: story["name"],
         dependencies: []
       })
+      storyPoints[story["name"]] = Number(story["metadata"]["story_points"])
     }
 
     const dependenciesText = await chatSession.sendMessage(
       JSON.stringify(inputStories)
     );
     const dependencies = JSON.parse(dependenciesText.response.text());
-    return dependencies;
-    // const dependsOn = {};
-    // for(let story of dependencies) {
-    //   dependsOn[story.story] = story.dependencies;
-    // }
-    // return dependsOn;
+    const dependsOn = {};
+    let i = 0;
+    for(let story of dependencies) {
+      dependsOn[story.story] = {
+        "deps": story.dependencies,
+        "index": i,
+        "points": storyPoints[story.story]
+      };
+      i++;
+    }
+    return dependsOn;
   }
 }
 
