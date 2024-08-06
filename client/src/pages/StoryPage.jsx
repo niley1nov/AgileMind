@@ -51,25 +51,15 @@ export default function StoryPage(){
 
     function toMarkdown(text) {
         if(!text) return text;
-        // Split the text into lines
-        const lines = text.trim().split('\n');
 
-        // Initialize HTML string
-        let html = '<ol>';
+        console.log(text);
+        text = text.trim();
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        text = text.replace(/\n/g, '<br>');
+        text = text.replace(/\*/g, '&emsp;&#8226');
+        console.log(text);
 
-        // Process each line
-        lines.forEach(line => {
-            // Bold text
-            line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            // Add list item
-            html += `<li style="margin-bottom: 10px;">${line}</li>`;
-        });
-
-        // Close the ordered list
-        html += '</ol>';
-
-        return html; 
+        return `<p>${text}</p>`; 
     }
 
 
