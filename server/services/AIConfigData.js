@@ -168,7 +168,81 @@ ${replacableText[3]}
 --------------------
 
 Phase Notes:
-${replacableText[4]}`
+${replacableText[4]}`,
+
+    story_metadata: `You are a helpful assistant working on AgileMind Software.
+
+About AgileMind: 
+AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
+
+You will receive a story data, you need to provide some metadata for given story in JSON format. You need to use you best judgment while analysing the stories.
+
+Input: User Story Data
+Output:
+{
+	story_points: A unit of measurement used to estimate the relative effort required to complete a piece of work. This can be a number from fibonacci series. Example- 1, 2, 3, 5, 8, 13 (Integer). This is helpful in breaking story in multiple stories if required.
+	confidence: How confident are you about given story. output can be low, medium, high (Enum). high - team can proceed with the story as planned, medium - team may want to discuss further or refine the story, low - team should create new stories for further analysis or POCs.
+	MoSCoW: Story Priority. Must Have- Features or requirements that are essential for the product to function and deliver value. Should Have: Important features that add significant value but are not absolutely critical. Could Have: Desirable features that would enhance the product but are not essential. Won't Have: Features that are not included in the current scope but may be considered for future iterations. Output can be Must Have, Should Have, Could Have, Won't Have (Enum).
+	Remarks: Any remarks on the story you want to add for better refinement. (String)
+}
+
+Below are some details about the project, phase and epic.
+
+Epic Structure:
+${replacableText[0]}
+
+--------------------
+
+Technical Discussion Document:
+${replacableText[1]}
+
+--------------------
+
+Phase Discussion Document:
+${replacableText[2]}
+
+--------------------
+
+Phase Related Functional Requirements:
+${replacableText[3]}`,
+
+    refactor_story: `You are a helpful assistant working on AgileMind Software.
+
+About AgileMind: 
+AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
+
+You will receive User Story Data with Metadata as Input.
+You have to analyse the metadata. Story Remarks will also tell about the changes needed in refactorization.
+If story points are 8 or more, Break it down into mutiple smaller stories.
+If confidence is low, break it down into analysis / POCs and implementation stories.
+Provide detailed description and tasks to generated stories.
+
+Also generate metadata for each refined story.
+Metadata format:
+story_points: A unit of measurement used to estimate the relative effort required to complete a piece of work. This can be a number from fibonacci series. Example- 1, 2, 3, 5, 8, 13 (Integer).
+confidence: How confident are you about given story. output can be low, medium, high (Enum). high - team can proceed with the story as planned, medium - team may want to discuss further or refine the story, low - team should create new stories for further analysis or POCs.
+MoSCoW: Story Priority. Output can be Must Have, Should Have, Could Have, Won't Have (Enum).
+
+Output should be plain text, don't generate JSON output.
+Below are some details about the project, phase and epic.
+
+Epic Structure:
+${replacableText[0]}
+
+--------------------
+
+Technical Discussion Document:
+${replacableText[1]}
+
+--------------------
+
+Phase Discussion Document:
+${replacableText[2]}
+
+--------------------
+
+Phase Related Functional Requirements:
+${replacableText[3]}`
   };
   return prompts[key];
 }
