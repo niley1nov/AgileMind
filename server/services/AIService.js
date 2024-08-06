@@ -509,7 +509,9 @@ Output JSON format:
     return newStories;
   }
 
-  async calculateDependencies() {
+  async calculateDependencies(
+    epic
+  ) {
     let model = this.genAI.getGenerativeModel({
       model: models["pro"],
       systemInstruction: getPrompts("calculate_dependencies", [
@@ -536,11 +538,12 @@ Output JSON format:
       JSON.stringify(inputStories)
     );
     const dependencies = JSON.parse(dependenciesText.response.text());
-    const dependsOn = {};
-    for(let story of dependencies) {
-      dependsOn[story.story] = story.dependencies;
-    }
-    return dependsOn;
+    return dependencies;
+    // const dependsOn = {};
+    // for(let story of dependencies) {
+    //   dependsOn[story.story] = story.dependencies;
+    // }
+    // return dependsOn;
   }
 }
 
