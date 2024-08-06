@@ -5,4 +5,13 @@ const roleOptions = [
     { value: "Tester", label: "Tester" },
 ];
 
-export {roleOptions};
+const storyStatusOptions = [
+    { value: "Planned", label: "Planned" },
+    { value: "Assigned", label: "Assigned" },
+    { value: "In Progress", label: "In Progress" },
+    { value: "Blocked", label: "Blocked" },
+    { value: "Backlog", label: "Backlog" },
+    { value: "Completed", label: "Completed" },
+]
+
+export {roleOptions, storyStatusOptions};

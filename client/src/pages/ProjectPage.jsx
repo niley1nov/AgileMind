@@ -102,7 +102,7 @@ export default function ProjectPage(){
               <SearchBar />
             </div>
             <div className="pt-8">
-              <ActionBar textToShow={projectName}>
+              <ActionBar textToShow={`Project: ${projectName}`}>
                   <Button
                       labelToShow="Add Members"
                       className="button-background-grad"
