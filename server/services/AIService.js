@@ -694,8 +694,8 @@ Output JSON format:
 			history: [],
 		});
 
-		inputStories = []; // Prepares a list to store the basic story information.
-		storyPoints = {}; // A dictionary to store story points by story name.
+		const inputStories = []; // Prepares a list to store the basic story information.
+		const storyPoints = {}; // A dictionary to store story points by story name.
 		for (let story of epic["stories"]) {
 			inputStories.push({
 				story: story["name"],
