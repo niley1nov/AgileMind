@@ -427,6 +427,86 @@ Output JSON format:
     console.log('>>>> EPIC FROM AI CLASS '+epic);
     return epic;
   }
+
+  async initStoryMetadata(
+    epic,
+    projectTechDiscussionDocument,
+    phaseDiscussionDocument,
+    phaseRelatedFunctionalDetails
+  ) {
+    let model = this.genAI.getGenerativeModel({
+      model: models["pro"],
+      systemInstruction: getPrompts("story_metadata", [
+        JSON.stringify(epic["data"]),
+        projectTechDiscussionDocument,
+        phaseDiscussionDocument,
+        phaseRelatedFunctionalDetails
+      ]),
+    });
+
+    let chatSession = model.startChat({
+      generationConfig: getGenConfig(0.4, "application/json", 4096, 0.95, 64),
+      history: [],
+    });
+
+    for(let story of epic["stories"]) {
+      const metadataText = await chatSession.sendMessage(
+        JSON.stringify(story)
+      );
+      const storyMetadata = JSON.parse(metadataText.response.text());
+      story["metadata"] = storyMetadata;
+    }
+
+    return epic;
+  }
+
+  async refactorStory(
+    epic,
+    projectTechDiscussionDocument,
+    phaseDiscussionDocument,
+    phaseRelatedFunctionalDetails,
+    story
+  ) {
+    let model = this.genAI.getGenerativeModel({
+      model: models["pro"],
+      systemInstruction: getPrompts("refactor_story", [
+        JSON.stringify(epic["data"]),
+        projectTechDiscussionDocument,
+        phaseDiscussionDocument,
+        phaseRelatedFunctionalDetails
+      ]),
+    });
+
+    let chatSession = model.startChat({
+      generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+      history: [],
+    });
+
+    const newStoriesText = await chatSession.sendMessage(
+      JSON.stringify(story)
+    );
+    const chatMessageToJsonify = `Convert below list of user stories into JSON structure.
+Output JSON format:
+[
+	{{
+		name: story name (String),
+		description: story description (string),
+        tasks: story tasks as it is (string),
+		metadata: {{
+			story_points: A unit of measurement used to estimate the relative effort required to complete a piece of work. This can be a number from fibonacci series. Example- 1, 2, 3, 5, 8, 13 (Integer).
+			confidence: How confident are you about given story. output can be low, medium, high (Enum).
+			MoSCoW: Story Priority. Output can be Must Have, Should Have, Could Have, Won't Have (Enum).
+		}}
+	}}
+]
+
+` + newStoriesText.response.text();
+    const jsonResponse = await this.jsonChatSession.sendMessage(
+      chatMessageToJsonify
+    );
+    const newStories = JSON.parse(jsonResponse.response.text());
+    return newStories;
+  }
 }
 
 export default AIService;
