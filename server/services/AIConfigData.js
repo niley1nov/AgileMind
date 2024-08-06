@@ -1,42 +1,42 @@
 const safety_settings = [
-  {
-    category: "HARM_CATEGORY_HARASSMENT",
-    threshold: "BLOCK_ONLY_HIGH",
-  },
-  {
-    category: "HARM_CATEGORY_HATE_SPEECH",
-    threshold: "BLOCK_ONLY_HIGH",
-  },
-  {
-    category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-    threshold: "BLOCK_ONLY_HIGH",
-  },
-  {
-    category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-    threshold: "BLOCK_ONLY_HIGH",
-  },
+	{
+		category: "HARM_CATEGORY_HARASSMENT",
+		threshold: "BLOCK_ONLY_HIGH",
+	},
+	{
+		category: "HARM_CATEGORY_HATE_SPEECH",
+		threshold: "BLOCK_ONLY_HIGH",
+	},
+	{
+		category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+		threshold: "BLOCK_ONLY_HIGH",
+	},
+	{
+		category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+		threshold: "BLOCK_ONLY_HIGH",
+	},
 ];
 
 const models = {
-  pro: "gemini-1.5-pro",
-  flash: "gemini-1.5-flash",
+	pro: "gemini-1.5-pro",
+	flash: "gemini-1.5-flash",
 };
 
-function getPrompts(key, replacableText=[]) {
-  const prompts = {
-    business_model: `You are a product team representative. Your job is to refine project's functional requirements. You will receive a Software Requirement Specification and some functioanl questions related to the project.
+function getPrompts(key, replacableText = []) {
+	const prompts = {
+		business_model: `You are a product team representative. Your job is to refine project's functional requirements. You will receive a Software Requirement Specification and some functioanl questions related to the project.
 Answer the questions according to you (dummy responses). Keep the response short and concise.
 
 SRS:
 ${replacableText[0]}`,
 
-    tech_model: `You are a developer team representative. You will receive a SRS and some technical questions related to the project.
+		tech_model: `You are a developer team representative. You will receive a SRS and some technical questions related to the project.
 Answer the questions according to you (dummy responses). Keep the response short and concise.
 
 SRS:
 ${replacableText[0]}`,
 
-    answer_model: `You are a assitant working on a software project. You will receive a project context, phase structure and some questions related to the project.
+		answer_model: `You are a assitant working on a software project. You will receive a project context, phase structure and some questions related to the project.
 Answer the questions according to you (dummy responses) by refering to context provided. These answers will help the team in refining the epic and story structure.
 Keep the response short and concise.
 
@@ -48,22 +48,22 @@ ${replacableText[0]}
 Project Technical Structure:
 ${replacableText[1]}`,
 
-    jsonify_model: `You are an assistant working on a software project.
+		jsonify_model: `You are an assistant working on a software project.
 Your will receive a document and a JSON format. You have to convert it into JSON format.
 Here is the project summary for context:
 ${replacableText[0]}`,
-    
-project_summary: `Input: Software Requirement Specification Document
+
+		project_summary: `Input: Software Requirement Specification Document
 Output: A short summary of given project as a paragraph`,
-    
-questions_from_SRS: `You will receive a Software Requirement Specification document. You have to ask technical and functional questions to better understand project scope and requirements. Input: Software Requirement Specification Output: Functional Questions - a series of functional questions for the product team. Technical Questions - a series of technical questions for the development team regarding the implementation approach of the software.`,
-    
-    document_project_level_discussion: `You will receive a chat discussion in JSON format regarding a project refinement, convert the discussion into document format.
+
+		questions_from_SRS: `You will receive a Software Requirement Specification document. You have to ask technical and functional questions to better understand project scope and requirements. Input: Software Requirement Specification Output: Functional Questions - a series of functional questions for the product team. Technical Questions - a series of technical questions for the development team regarding the implementation approach of the software.`,
+
+		document_project_level_discussion: `You will receive a chat discussion in JSON format regarding a project refinement, convert the discussion into document format.
     
 project SRS for context:
 ${replacableText[0]}`,
 
-    project_functional_chat: `You are a project manager working on a software project.
+		project_functional_chat: `You are a project manager working on a software project.
 Your goal is to refine the project structure.
 You will get some user query and some optional context, answer accordingly.
 
@@ -74,8 +74,8 @@ ${replacableText[0]}
 
 Functional Discussion Document: 
 ${replacableText[1]}`,
-    
-    project_technical_chat: `You are a technical architect working on a software project.
+
+		project_technical_chat: `You are a technical architect working on a software project.
 Your goal is to refine the project implementation structure.
 You will get some user query and some optional context, answer accordingly.
 
@@ -86,8 +86,8 @@ ${replacableText[0]}
 
 Technical Discussion Document:
 ${replacableText[1]}`,
-    
-    questions_from_phase: `You are a helpful assistant working on AgileMind Software.
+
+		questions_from_phase: `You are a helpful assistant working on AgileMind Software.
 About AgileMind:
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
  
@@ -102,20 +102,20 @@ ${replacableText[0]}
 Project Implementation Structure:
 ${replacableText[1]}`,
 
-    document_phase_level_discussion: `You are an assitant working on a software project. You will receive a phase structure and a chat discussion in JSON format regarding that phase refinement, convert the discussion into a detailed document.
+		document_phase_level_discussion: `You are an assitant working on a software project. You will receive a phase structure and a chat discussion in JSON format regarding that phase refinement, convert the discussion into a detailed document.
 Don't add any unnecessary details.
 
 Project summary for context:
 ${replacableText[0]}`,
 
-    filter_phase_related_information: `'You are an assistant working on a software project. You help in project refinement process.
+		filter_phase_related_information: `'You are an assistant working on a software project. You help in project refinement process.
 You will receive a JIRA phase information from the project implementation structure. You need to analyze Project Functional Structure and filter phase relevant information.
 Output should be all relevant information from Project Functional Structure, that could be related to provided phase.
 
 Project Functional Structure:
 ${replacableText[0]}`,
 
-    refine_phase: `You are a helpful assistant working on AgileMind Software.
+		refine_phase: `You are a helpful assistant working on AgileMind Software.
 
 About AgileMind: 
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
@@ -136,7 +136,7 @@ ${replacableText[0]}
 Technical Discussion Document:
 ${replacableText[1]}`,
 
-    refine_epic: `You are a helpful assistant working on AgileMind Software.
+		refine_epic: `You are a helpful assistant working on AgileMind Software.
 
 About AgileMind: 
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
@@ -170,7 +170,7 @@ ${replacableText[3]}
 Phase Notes:
 ${replacableText[4]}`,
 
-    story_metadata: `You are a helpful assistant working on AgileMind Software.
+		story_metadata: `You are a helpful assistant working on AgileMind Software.
 
 About AgileMind: 
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
@@ -206,7 +206,7 @@ ${replacableText[2]}
 Phase Related Functional Requirements:
 ${replacableText[3]}`,
 
-    refactor_story: `You are a helpful assistant working on AgileMind Software.
+		refactor_story: `You are a helpful assistant working on AgileMind Software.
 
 About AgileMind: 
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
@@ -249,7 +249,7 @@ ${replacableText[3]}
 Phase Related Functional Requirements:
 ${replacableText[4]}`,
 
-    calculate_dependencies: `You are a helpful assistant that work on JIRA software to refine and groom user stories, epics, phases and overall project structure.
+		calculate_dependencies: `You are a helpful assistant that work on JIRA software to refine and groom user stories, epics, phases and overall project structure.
 
 You will receive a list of stories from "${replacableText[0]}" epic as input. You need to analyze dependencies between all epic stories and find the output fill dependencies filed in input JSON.
 
@@ -269,8 +269,8 @@ Below is the epic strucure,
 ${replacableText[1]}
 
 ${replacableText[2]}`
-  };
-  return prompts[key];
+	};
+	return prompts[key];
 }
 
 export { safety_settings, models, getPrompts };
