@@ -1,5 +1,6 @@
 import Project from "../models/Project.js";
 import Phase from "../models/Phase.js";
+import Epic from "../models/Epic.js";
 import mongoose from "mongoose";
 
 
@@ -16,15 +17,23 @@ async function getPhaseList(req, res) {
                 }
             },
             {
+              $lookup: {
+                from: 'epics', 
+                localField: '_id',
+                foreignField: 'phaseId',
+                as: 'epics'
+              }
+            },
+            {
                 $project: {
                   _id: 1,
                   phaseName: 1,
                   status:  1,
-                  totalEpics: '0'
+                  totalEpics: { $size: '$epics' }
                 }
             }
         ]
-      )
+      );
       let wrapper = {};
       wrapper.projectName = project.projectName;
       wrapper.projectStatus = project.status;
@@ -43,10 +52,35 @@ async function getEpicList(req, res){
     try {
         const phaseId = req.query.phaseId;
         const phase = await Phase.findOne({ _id: phaseId });
+        const epicList = await Epic.aggregate(
+          [
+              {
+                  $match: {
+                      phaseId: new mongoose.Types.ObjectId(phaseId),
+                  }
+              },
+              {
+                $lookup: {
+                  from: 'stories', 
+                  localField: '_id',
+                  foreignField: 'epicId',
+                  as: 'stories'
+                }
+              },
+              {
+                  $project: {
+                    _id: 1,
+                    epicName: 1,
+                    status: 'In Progress',
+                    totalStories: { $size: '$stories' }
+                  }
+              }
+          ]
+        );
         let wrapper = {};
         wrapper.phaseName = phase.phaseName;
         wrapper.phaseStatus = phase.status;
-        wrapper.epicList = [];
+        wrapper.epicList = epicList;
         res.json(wrapper);
       } catch (err) {
         res.status(500).json({

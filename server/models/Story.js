@@ -7,6 +7,18 @@ const storySchema = new mongoose.Schema({
     tasks: {type: String},
     devOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users"},
     qaOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users"},
+    status: {
+        type: String,
+        enum: [
+          "Planned",
+          "Assigned",
+          "In Progress",
+          "Blocked",
+          "Backlog",
+          "Completed",
+        ],
+        default: "Planned",
+    }
 });
 
 export default mongoose.model("stories", storySchema);

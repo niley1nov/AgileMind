@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Table from "../components/Table";
 import {PROJECT_STATUS_CREATED, PROJECT_STATUS_WAITING_FOR_INPUT, PROJECT_STATUS_INPUT_PROVIDED, PROJECT_SETUP_STATUS} from '../services/contstant';
 
@@ -21,7 +21,7 @@ export default function PhasePage(){
 
     const heading = [
       { key: "epicName", label: "Epic Name" },
-      { key: "status", label: "Epic Status" },
+      {key: "status", label: "Epic Status"},
       { key: "totalStories", label: "# Stories" }
     ];
 
@@ -47,19 +47,24 @@ export default function PhasePage(){
         if(response.status =="200"){
             setPhaseName(response.data.phaseName);
             setPhaseStatus(response.data.phaseStatus);
+            setEpicList(response.data.epicList.map(function(epic){
+              epic.epicName = (
+                <Link to={"/Epic/" + epic._id} className="text-blue-500 text-sm hover:text-blue-800">
+                  {epic.epicName}
+                </Link>
+              );
+              return epic;
+            }));
         }
       }catch(error){
         setPopupMessage(error.message);
         setTimeout(function(){setPopupMessage("")},2000);
-        navigate("/login");
+        //navigate("/login");
         return [];
       }finally{
         setShowSpinner(false);
       }
     }
-
-
-
 
     return (
         <div className="px-20 text-white">
@@ -135,5 +140,4 @@ const PhasePageMessage = memo(function PhasePageMessage({phaseStatus, phaseId}) 
       </div>
     );
   }
-    
-  });
+});
