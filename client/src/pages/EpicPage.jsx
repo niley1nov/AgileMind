@@ -53,7 +53,7 @@ export default function EpicPage(){
             setEpicName(response.data.epicName);
             setStoryList(response.data.storyList.map(function(story){
                 story.storyName = (
-                    <Link to={"/Story/" + story._id} className="text-blue-500 text-sm hover:text-blue-800">
+                    <Link to={"/Story/" + story._id} className="text-purple-400 text-sm hover:text-purple-500">
                       {story.storyName}
                     </Link>
                   );

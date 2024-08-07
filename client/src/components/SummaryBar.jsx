@@ -5,7 +5,7 @@ export default function SummaryBar({children, textToShow, subTextToShow}){
             <div className="text-4xl">
                 {textToShow}
             </div>
-            <div className="text-sm text-neutral-400">
+            <div className="text-sm text-neutral-300">
                 {subTextToShow}
             </div>
         </div>

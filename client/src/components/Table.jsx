@@ -4,7 +4,7 @@ export default function Table({header, rowList}) {
     if(!rowList || rowList.length == 0) return null;
   return (
     <div className="pb-8">
-      <div className="grid grid-flow-col auto-cols-fr w-full pl-2 pr-6 py-6 text-neutral-400">
+      <div className="grid grid-flow-col auto-cols-fr w-full pl-2 pr-6 py-6 text-neutral-300">
         {
             header.map(function(heading){
                 return <div className="text-sm" key={heading.key}>{heading.label}</div>;

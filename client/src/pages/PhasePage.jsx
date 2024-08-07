@@ -49,7 +49,7 @@ export default function PhasePage(){
             setPhaseStatus(response.data.phaseStatus);
             setEpicList(response.data.epicList.map(function(epic){
               epic.epicName = (
-                <Link to={"/Epic/" + epic._id} className="text-blue-500 text-sm hover:text-blue-800">
+                <Link to={"/Epic/" + epic._id} className="text-purple-400 text-sm hover:text-purple-500">
                   {epic.epicName}
                 </Link>
               );

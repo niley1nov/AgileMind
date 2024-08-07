@@ -70,7 +70,7 @@ export default function ProjectPage(){
           setPhaseList(
             response.data.phaseList.map(function (phase) {
               phase.phaseName = (
-                <Link to={"/Phase/" + phase._id} className="text-blue-500 text-sm hover:text-blue-800">
+                <Link to={"/Phase/" + phase._id} className="text-purple-400 text-sm hover:text-purple-500">
                   {phase.phaseName}
                 </Link>
               );

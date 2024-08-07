@@ -55,6 +55,8 @@ export default function StoryPage(){
         if(!text) return text;
 
         text = text.trim();
+        
+        text = text.replaceAll('* **Task', '**Task');
         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         text = text.replace(/\n/g, '<br>');
         text = text.replace(/\*/g, '&emsp;&#8226');
