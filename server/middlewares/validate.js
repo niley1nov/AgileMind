@@ -147,7 +147,7 @@ function validateUpdateStoryDetails(req, res, next) {
 		),
 		confidence: zod.string().refine(
 			(confidence) => {
-				const confidenceList = ["High", "Medium","Low"];
+				const confidenceList = ["high", "medium","low"];
 				return confidenceList.includes(confidence);
 			},
 			{
@@ -177,6 +177,22 @@ function validateUpdateStoryDetails(req, res, next) {
 	}
 }
 
+function validateStoryRefectorReqDetails(req, res, next) {
+	const reqDetailSchema = zod.object({
+		storyId: zod.string(),
+	});
+	const reqDetail = req.body;
+	const result = reqDetailSchema.safeParse(reqDetail);
+	if (!result.success) {
+		res.status(422).json({ error: result.error });
+	}else{
+		next();
+	}
+}
+
+
+
+
 export {
 	validateRegistrationDetails,
 	validateLoginDetails,
@@ -184,5 +200,6 @@ export {
 	validateProjectAssignmentDetails,
 	validateUpdateAnswersDetails,
 	validateSubmitQuestionsDetails,
-	validateUpdateStoryDetails
+	validateUpdateStoryDetails,
+	validateStoryRefectorReqDetails
 };

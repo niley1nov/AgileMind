@@ -9,6 +9,7 @@ import EpicPage from './pages/EpicPage';
 import Layout from './layouts/Layout';
 import GuestLayout from './layouts/GuestLayout';
 import StoryPage from './pages/StoryPage';
+import DependencyGraphPage from './pages/DependencyGraphPage';
 
 
 import './App.css';
@@ -29,6 +30,7 @@ function App() {
               <Route path='/Questions/:type/:id' element={<QuestionsPage/>}/>
               <Route path='/Epic/:id' element={<EpicPage/>}/>
               <Route path='/Story/:id' element={<StoryPage/>}/>
+              <Route path='/Dependency/:id' element={<DependencyGraphPage/>}/>
             </Route>
           </Routes>
       </BrowserRouter>

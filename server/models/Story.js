@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {reFectorStory} from "../services/StoryService.js";
 
 const storySchema = new mongoose.Schema({
 	storyName: { type: String, required: "Story Name is a required field" },
@@ -26,7 +27,7 @@ const storySchema = new mongoose.Schema({
 	storyPoint: { type: Number },
 	confidence: {
 		type: String,
-		enum: ["High", "Medium","Low"],
+		enum: ["high", "medium","low"],
 	},
 	moscow: {
 		type: String,
@@ -34,7 +35,33 @@ const storySchema = new mongoose.Schema({
 	},
 	remarks: {
 		type: String
-	}
+	},
+	seqNumber: {type: Number, required: true, min: 1},
+	refectoringRequested: {type: Boolean, default: false}
+
+});
+
+
+let oldDocumentCache = {};
+
+// Pre hook to capture the previous state of the document
+storySchema.pre("findOneAndUpdate", async function (next) {
+  const oldDoc = await this.model.findOne(this.getQuery());
+  oldDocumentCache[this.getFilter()._id] = oldDoc;
+  next();
+});
+
+//Post hook for update operation
+storySchema.post("findOneAndUpdate", function (doc) {
+  const oldDoc = oldDocumentCache[doc._id];
+  if (
+    doc.refectoringRequested &&
+    !oldDoc.refectoringRequested
+    
+  ){
+	//Write your logic of refectoring here
+	reFectorStory(doc._id, doc.epicId);
+  }
 });
 
 export default mongoose.model("stories", storySchema);

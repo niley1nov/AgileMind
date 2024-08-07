@@ -6,6 +6,7 @@ import { getProjectDocumentContent } from "../utilities/documentUtil.js";
 import { DOCUMENT_TYPE } from "../utilities/constant.js";
 import Epic from "../models/Epic.js";
 import Story from "../models/Story.js";
+import Phase from "../models/Phase.js";
 
 async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
     const currPhaseChat = await getPhaseChat(phaseId);
@@ -86,9 +87,14 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
         })
     );
 
-    console.log('>>> refinedStoryList '+JSON.stringify(refinedStoryList));
+    const refiledStoryWithMetaDataList = await Promise.all(refinedStoryList.map(async function(epic){
+            return await service.initStoryMetadata(epic,projectTechDiscussionDocument,phaseDiscussionDoc,phaseRelatedFunctionalDetails);
+        })
+    );
 
-    await createEpicStoryUnderPhase(phaseId, refinedStoryList);
+    console.log('>>> refinedStoryList '+JSON.stringify(refiledStoryWithMetaDataList));
+
+    await createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaDataList);
 
     console.log('>>> Created All the data ');
 
@@ -227,31 +233,41 @@ async function getPhaseRefinementHistory(
     );
 }
 
-async function createEpicStoryUnderPhase(phaseId, refinedStoryList) {
+async function createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaDataList) {
     let storyList = [];
-    let taskList = [];
 
     //Create epic list to insert
-    const epicList = refinedStoryList.map(function (epic, index) {
-        return {
-        epicName: epic.name,
-        phaseId: phaseId,
-        seqNumber: index + 1,
-        epicData: epic.data,
-        };
-    });
+    const epicList = await Promise.all(
+            refiledStoryWithMetaDataList.map(async function (epic, index) {
+            const dependencies = await service.calculateDependencies(epic);
+            return {
+                epicName: epic.name,
+                phaseId: phaseId,
+                seqNumber: index + 1,
+                epicData: epic.data,
+                storyDependencies : JSON.stringify(dependencies)
+            };
+        }
+    ));
+
+    console.log('>>>EPIC TO INSERT '+JSON.stringify(epicList));
     const insertedEpics = await Epic.insertMany(epicList);
 
     //Create story list to insert
     for (let epicIndex = 0; epicIndex < insertedEpics.length; epicIndex++) {
-        const epic = refinedStoryList[epicIndex];
-        const tempStoryList = epic.stories.map(function (story) {
-        return {
-            storyName: story.name,
-            epicId: insertedEpics[epicIndex]._id,
-            description: story.description,
-            tasks: story.tasks
-        };
+        const epic = refiledStoryWithMetaDataList[epicIndex];
+        const tempStoryList = epic.stories.map(function (story,index) {
+            return {
+                storyName: story.name,
+                epicId: insertedEpics[epicIndex]._id,
+                description: story.description,
+                tasks: story.tasks,
+                storyPoint: story.metadata.story_points,
+                confidence: story.metadata.confidence,
+                moscow: story.metadata.MoSCoW,
+                remarks: story.metadata.Remarks,
+                seqNumber: index+1
+            };
         });
         storyList = [...storyList, ...tempStoryList];
     }
@@ -259,4 +275,4 @@ async function createEpicStoryUnderPhase(phaseId, refinedStoryList) {
     await Story.insertMany(storyList);
 }
 
-export { createPhaseStructure };
+export { createPhaseStructure};

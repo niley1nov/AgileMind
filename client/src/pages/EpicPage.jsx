@@ -6,6 +6,8 @@ import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Table from "../components/Table";
+import Button from "../components/Button";
+
 
 
 export default function EpicPage(){
@@ -30,7 +32,11 @@ export default function EpicPage(){
     
     useEffect(function(){
       getStoryList();
-    },[])
+    },[]);
+
+    function navigateToDependancyGraph(){
+      navigate('/Dependency/'+id);
+    }
 
 
     async function getStoryList(){
@@ -74,6 +80,11 @@ export default function EpicPage(){
             </div>
             <div className="pt-8">
               <ActionBar textToShow={`Epic: ${epicName}`}>
+                <Button
+                      labelToShow="View Dependency Graph"
+                      className="button-background-grad"
+                      onClick={navigateToDependancyGraph}
+                />
               </ActionBar>
             </div>
             <div className="pt-8">
