@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
       generateJWTToken() {
         const payload = { id: this._id };
         return jwt.sign(payload, config.JWT_SECRET_TOKEN, {
-          expiresIn: "20m",
+          expiresIn: "60m",
         });
       },
     },

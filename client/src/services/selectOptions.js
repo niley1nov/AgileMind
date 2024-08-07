@@ -15,9 +15,9 @@ const storyStatusOptions = [
 ];
 
 const storyConfidenceOption = [
-    { value: "High", label: "High" },
-    { value: "Medium", label: "Medium" },
-    { value: "Low", label: "Low" },
+    { value: "high", label: "high" },
+    { value: "medium", label: "medium" },
+    { value: "low", label: "low" },
 
 ];
 

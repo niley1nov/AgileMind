@@ -2,12 +2,13 @@ import SearchBar from "../components/SearchBar";
 import ActionBar from "../components/ActionBar";
 import StoryDetails from "../components/StoryDetails";
 import StoryInputs from "../components/StoryInputs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PopupMessage from "../components/PopupMessage";
 import Spinner from "../components/Spinner";
 import { useParams} from 'react-router-dom';
 import { apiClientForAuthReq } from "../services/apiService";
-
+import Button from "../components/Button";
+import RefectorStoryConfModal from "../components/RefectorStoryConfModal";
 
 
 export default function StoryPage(){
@@ -16,6 +17,7 @@ export default function StoryPage(){
     const [showSpinner, setShowSpinner] = useState(false);
     const [storyDetails, setStoryDetails] = useState({});
     const [storyInputDetails, setStoryInputDetails] = useState({});
+    const [showRefectorModal, setShowRefectorModal] = useState(false);
 
     const { id } = useParams();
 
@@ -60,24 +62,41 @@ export default function StoryPage(){
         return `<p>${text}</p>`; 
     }
 
+    function refectorStory(){
+      setShowRefectorModal(true);
+    }
+
+    const onCloseModal = useCallback(function(){
+      setShowRefectorModal(false);
+    },[]);
+
 
     return (
         <div className="px-20 text-white">
             <Spinner showSpinner={showSpinner}/>
             <PopupMessage message={popupMessage}></PopupMessage>
+            <RefectorStoryConfModal showModal={showRefectorModal} onClose={onCloseModal}/>
             <div className="flex flex-col w-full h-full">
-            <div className="pt-8">
-                <SearchBar />
-            </div>
-            <div className="pt-8">
-                <ActionBar textToShow={`Story: ${storyDetails.storyName}`}>
-                </ActionBar>
-            </div>
-            <div className="pt-8">
-                <StoryDetails description={storyDetails.description} tasks={toMarkdown(storyDetails.tasks)} epicName ={storyDetails.epicName}/>
-                <StoryInputs storyInputDetails={storyInputDetails} storyId={id}/>
-            </div>
-            </div>
-    </div>
+              <div className="pt-8">
+                  <SearchBar />
+              </div>
+              <div className="pt-8">
+                  <ActionBar textToShow={`Story: ${storyDetails.storyName}`}>
+                    {storyInputDetails.storyPoint>8 || storyInputDetails.confidence == 'low' ? 
+                      <Button
+                      labelToShow="Refector Story"
+                      className="button-background-grad"
+                      onClick={refectorStory}/>
+                     :
+                      ''
+                    }
+                  </ActionBar>
+              </div>
+              <div className="pt-8">
+                  <StoryDetails description={storyDetails.description} tasks={toMarkdown(storyDetails.tasks)} epicName ={storyDetails.epicName}/>
+                  <StoryInputs storyInputDetails={storyInputDetails} storyId={id}/>
+              </div>
+          </div>
+        </div>
     )
 }

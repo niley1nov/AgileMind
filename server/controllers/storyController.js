@@ -50,7 +50,7 @@ async function getStoryDetails(req,res){
                         remarks: 1,
                         epicName: "$epic.epicName",
                         devOwnerEmail: "$devUser.userEmail",
-                        qaOwnerEmail: "$qaUser.userEmail"
+                        qaOwnerEmail: "$qaUser.userEmail" 
                     }
                 }
             ]
@@ -114,4 +114,28 @@ async function updateStoryDetails(req, res){
 }
 
 
-export {getStoryDetails, updateStoryDetails};
+async function requestForStoryRefectoring(req, res){
+    try{
+        const storyDetail = req.body;
+        const updatedStory = await Story.findOneAndUpdate(
+            {_id: storyDetail.storyId, refectoringRequested: false},
+            {refectoringRequested: true},
+            {new: true}
+        );
+        res.status(200).json({
+            status: "success",
+            Id: updatedStory._Id,
+            epicId: updatedStory.epicId
+        });
+
+    }catch (err) {
+        console.log( "Internal Server Error " + err.message);
+        res.status(500).json({
+          status: "error",
+          message: "Internal Server Error " + err.message,
+        });
+    }
+}
+
+
+export {getStoryDetails, updateStoryDetails,requestForStoryRefectoring};

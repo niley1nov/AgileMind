@@ -14,6 +14,9 @@ async function getStoryList(req, res){
                     }
                 },
                 {
+                    $sort: { seqNumber: 1 },
+                },
+                {
                     $project: {
                       _id: 1,
                       storyName: 1,
@@ -39,4 +42,22 @@ async function getStoryList(req, res){
     }
 }
 
-export {getStoryList};
+
+async function getStoryDependencyData(req, res){
+    try{
+        const epicId = req.query.epicId;
+        const epic = await Epic.findOne({ _id: epicId });
+        const wrapper = {};
+        wrapper.epicName = epic.epicName;
+        wrapper.storyDependencies = JSON.parse(epic.storyDependencies);
+        res.json(wrapper);
+    }catch (err) {
+        console.log( "Internal Server Error " + err.message);
+        res.status(500).json({
+          status: "error",
+          message: "Internal Server Error " + err.message,
+        });
+    }
+}
+
+export {getStoryList,getStoryDependencyData};

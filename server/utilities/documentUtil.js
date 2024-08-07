@@ -7,4 +7,10 @@ async function getProjectDocumentContent(projectId, docType){
 }
 
 
-export {getProjectDocumentContent}
+async function getPhaseDocumentContent(phaseId, docType){
+    const projDocument = await Document.findOne({phaseId: phaseId, docType: docType}); 
+    return projDocument ? projDocument.content : '';
+}
+
+
+export {getProjectDocumentContent,getPhaseDocumentContent}
