@@ -213,7 +213,7 @@ const StoryInputs = memo(
                                 </div>
                                 :
                                 <button
-                                    className="mt-4 mb-2 text-white py-2 px-6 text-sm rounded-full transition duration-200 bg-neutral-900" onClick={onEditClick}>
+                                    className="mt-4 mb-2 button-background-grad text-white py-2 px-6 text-sm rounded-full transition duration-200" onClick={onEditClick}>
                                     Edit
                                 </button>
                         }
