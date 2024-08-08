@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 
 async function reFectorStory(storyId, epicId) {
   //Get all the list of stories under the epic
-  const epic = await Epic.aggregate([
+  const epicList = await Epic.aggregate([
     {
       $match: { _id: new mongoose.Types.ObjectId(epicId) },
     },
@@ -31,11 +31,16 @@ async function reFectorStory(storyId, epicId) {
         epicName: 1,
         epicData: 1,
         phaseId: 1,
+        notes: 1,
         projectId: "$project._id",
         projectSummary: "$project.projectSummary",
       },
     },
   ]);
+
+  const epic = epicList[0];
+
+
   const relatedStories = await Story.find({ epicId: epicId }).sort({
     seqNumber: 1,
   });
@@ -68,6 +73,7 @@ async function reFectorStory(storyId, epicId) {
     phaseRelatedFunctionalDetails,
     storyToRefector
   );
+
   await updateStoriesUnderEpic(
     newStories,
     relatedStories.slice(storyToRefectorSeq),
@@ -75,6 +81,8 @@ async function reFectorStory(storyId, epicId) {
     epicId,
     storyId
   );
+
+  await updateDependencyGraphOnEpic(service, epic);
 }
 
 function getStoryListAndStoryToRefector(relatedStories, epic,storyId) {
@@ -92,7 +100,7 @@ function getStoryListAndStoryToRefector(relatedStories, epic,storyId) {
         Remarks: story.remarks,
       },
     };
-    if (story._id == storyId) {
+    if (storyId != null && story._id.toString() == storyId.toString()) {
       storyToRefector = storyForModel;
       storyToRefectorSeq = story.seqNumber;
     }
@@ -102,7 +110,10 @@ function getStoryListAndStoryToRefector(relatedStories, epic,storyId) {
   const epicData = {};
   epicData.name = epic.epicName;
   epicData.data = epic.epicData;
+  epicData.notes = JSON.parse(epic.notes);
   epicData.stories = stories;
+  console.log('>>>storyToRefectorSeq '+storyToRefectorSeq);
+
 
   return { epicData, storyToRefector, storyToRefectorSeq };
 }
@@ -148,8 +159,17 @@ async function updateStoriesUnderEpic(
   });
 
   const bulkOps = [...bulkOpsNew, ...bulkOpsExisting];
-  const result = await Story.bulkWrite(bulkOps);
-  const deleteResult = await Story.findByIdAndDelete(storyId);
+  await Story.bulkWrite(bulkOps);
+  await Story.findByIdAndDelete(storyId);
 }
 
-export { reFectorStory };
+async function updateDependencyGraphOnEpic(service, epic){
+  const updatedStories = await Story.find({ epicId: epic._id }).sort({
+    seqNumber: 1,
+  });
+  const {epicData} = getStoryListAndStoryToRefector(updatedStories, epic, null);
+  const dependencies = await service.calculateDependencies(epicData);
+  await Epic.findOneAndUpdate({_id: epic._id}, {storyDependencies: JSON.stringify(dependencies)});
+}
+
+export { reFectorStory }; 
