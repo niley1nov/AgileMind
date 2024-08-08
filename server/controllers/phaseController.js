@@ -17,6 +17,9 @@ async function getPhaseList(req, res) {
                 }
             },
             {
+              $sort: { seqNumber: 1 },
+            },
+            {
               $lookup: {
                 from: 'epics', 
                 localField: '_id',
@@ -58,6 +61,9 @@ async function getEpicList(req, res){
                   $match: {
                       phaseId: new mongoose.Types.ObjectId(phaseId),
                   }
+              },
+              {
+                $sort: { seqNumber: 1 },
               },
               {
                 $lookup: {
