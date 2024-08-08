@@ -113,7 +113,6 @@ async function updateStoryDetails(req, res){
     }
 }
 
-
 async function requestForStoryRefectoring(req, res){
     try{
         const storyDetail = req.body;
