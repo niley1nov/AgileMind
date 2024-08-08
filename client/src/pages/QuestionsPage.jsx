@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import TextAreaInput from "../components/TextAreaInput";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
@@ -155,6 +155,7 @@ export default function QuestionsPage() {
                         register={register(`question${index}`, { required: "Required field" })}
                         errorToShow={errors[`question${index}`]?.message} 
                         onInputChange={e=>onAnswerChanges(q._id, e.target.value)}
+                        supportingText={q.subtype}
                       />
                     );
                   })}
@@ -166,7 +167,7 @@ export default function QuestionsPage() {
             <div className="flex justify-center">
                 <div className="flex space-x-4">
                     <Button
-                        labelToShow="Save for Later"
+                        labelToShow="Save and Back"
                         className="button-background-grad"
                         onClick={onSaveButtonClick}
                     />
