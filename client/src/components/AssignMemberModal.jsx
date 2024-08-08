@@ -147,5 +147,5 @@ export default function AssignMemberModal({showModal, onClose}){
             </div>
           </div>
         </div>
-      );
+    );
 }

@@ -40,7 +40,7 @@ export default function Home() {
           setProjectList(
             response.data.map(function (project) {
               project.projectName = (
-                <Link to={"/Project/" + project._id} className="text-blue-500 text-sm hover:text-blue-800">
+                <Link to={"/Project/" + project._id} className="text-purple-400 text-sm hover:text-purple-500">
                   {project.projectName}
                 </Link>
               );

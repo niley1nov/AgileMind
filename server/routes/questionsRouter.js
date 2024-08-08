@@ -2,6 +2,7 @@ import express from "express";
 import { verifyUser } from "../middlewares/verifyUser.js";
 import {
   getProjectLevelQuestions,
+  getPhaseLevelQuestions,
   updateAnswers,
   submitQuestions
 } from "../controllers/questionsController.js";
@@ -10,6 +11,8 @@ import { validateUpdateAnswersDetails,validateSubmitQuestionsDetails } from "../
 const router = express.Router();
 
 router.get("/getProjectLevelQuestions", verifyUser, getProjectLevelQuestions);
+router.get("/getPhaseLevelQuestions", verifyUser, getPhaseLevelQuestions);
+
 router.post(
   "/updateQuestionAnswers",
   verifyUser,

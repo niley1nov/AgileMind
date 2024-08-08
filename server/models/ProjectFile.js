@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {updateProjectSummary} from "../controllers/projectController.js"; 
+import {updateProjectSummaryAndProjectQuestions} from "../services/projectService.js"; 
 
 const projectFileSchema = new mongoose.Schema(
   {
@@ -15,7 +15,7 @@ const projectFileSchema = new mongoose.Schema(
 //When ProjectFile is saved 
 projectFileSchema.post('save', async function(doc) {
   const dataText = this.data.toString('utf-8');
-  updateProjectSummary(doc.projectId, dataText);  
+  updateProjectSummaryAndProjectQuestions(doc.projectId, dataText);  
 });
 
 export default mongoose.model("projectFiles", projectFileSchema);

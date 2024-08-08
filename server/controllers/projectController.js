@@ -1,10 +1,8 @@
 import Project from "../models/Project.js";
 import ProjectAssignment from "../models/ProjectAssignment.js";
-import ProjectQuestion from "../models/ProjectQuestion.js";
 import User from "../models/User.js";
 import ProjectFile from "../models/ProjectFile.js";
 import { formatDate } from "../utilities/formatUtil.js";
-import AIService from "../services/AIService.js";
 import mongoose from "mongoose";
 
 async function createProject(req, res) {
@@ -43,15 +41,42 @@ async function getAssignedProjectList(req, res) {
   try {
     const assignments = await ProjectAssignment.find({ userId: req.user._id });
     const projectIds = assignments.map((assignment) => assignment.projectId);
-    const projects = await Project.find({ _id: { $in: projectIds } });
-    const projectRes = projects.map(function (project) {
+    //const projects = await Project.find({ _id: { $in: projectIds } });
+
+    const projectList = await Project.aggregate(
+      [
+        { 
+          $match: { 
+            _id: { $in: projectIds }
+          } 
+        },
+        {
+          $lookup: {
+            from: 'phases', // The collection name in the database
+            localField: '_id',
+            foreignField: 'projectId',
+            as: 'phases'
+          }
+        },
+        {
+          $project: {
+            projectName: 1,
+            startDate: 1,
+            releaseDate: 1,
+            status: 1,
+            phaseCount: { $size: '$phases' }
+          }
+        }
+      ]
+    );
+    const projectRes = projectList.map(function (project) {
       let projectWrapper = {};
       projectWrapper._id = project._id;
       projectWrapper.projectName = project.projectName;
       projectWrapper.startDate = formatDate(project.startDate);
       projectWrapper.releaseDate = formatDate(project.releaseDate);
-      (projectWrapper.status = project.status),
-        (projectWrapper.totalPhase = "0");
+      projectWrapper.status = project.status;
+      projectWrapper.totalPhase = project.phaseCount;
       return projectWrapper;
     });
     res.json(projectRes);
@@ -60,6 +85,7 @@ async function getAssignedProjectList(req, res) {
       status: "error",
       message: "Internal Server Error " + err.message,
     });
+
   }
 }
 
@@ -126,22 +152,6 @@ async function createProjectAssignmentRec(
   }
 }
 
-async function getPhaseList(req, res) {
-  try {
-    const projectId = req.query.projectId;
-    const project = await Project.findOne({ _id: projectId });
-    let wrapper = {};
-    wrapper.projectName = project.projectName;
-    wrapper.projectStatus = project.status;
-    res.json(wrapper);
-  } catch (err) {
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error " + err.message,
-    });
-  }
-}
-
 async function getProjectAssignments(req, res) {
   try {
     const projectId = req.query.projectId;
@@ -174,7 +184,6 @@ async function getProjectAssignments(req, res) {
         },
       },
     ]);
-    console.log('>>> '+results);
     res.status(200).json(results);
   } catch (err) {
     res.status(500).json({
@@ -189,51 +198,9 @@ async function saveSRSFile(fileToSave) {
   await newFile.save();
 }
 
-async function updateProjectSummary(projectId, srsText) {
-  const service = new AIService();
-  const projectSummary = await service.getProjectSummary(srsText);
-  const projectQuestions = JSON.parse(
-    await service.getProjectLevelQuestions(srsText)
-  );
-
-  const functionalQuestions = projectQuestions["functional"].map(function (
-    question,
-    index
-  ) {
-    return new ProjectQuestion({
-      seqNumber: index + 1,
-      question: question,
-      projectId: projectId,
-      type: "Functional",
-    });
-  });
-
-  const technicalQuestions = projectQuestions["technical"].map(function (
-    question,
-    index
-  ) {
-    return new ProjectQuestion({
-      seqNumber: index + 1,
-      question: question,
-      projectId: projectId,
-      type: "Technical",
-    });
-  });
-  await ProjectQuestion.insertMany([
-    ...functionalQuestions,
-    ...technicalQuestions,
-  ]);
-  await Project.updateOne(
-    { _id: projectId },
-    { projectSummary: projectSummary, status: "Waiting for Input" }
-  );
-}
-
 export {
   createProject,
   getAssignedProjectList,
   createProjectAssignment,
-  updateProjectSummary,
-  getPhaseList,
   getProjectAssignments,
 };

@@ -7,7 +7,8 @@ import ViewAssignmentModal from "../components/ViewAssignmentModal";
 import Spinner from "../components/Spinner";
 import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import Table from "../components/Table";
 import {PROJECT_STATUS_CREATED, PROJECT_STATUS_WAITING_FOR_INPUT, PROJECT_STATUS_INPUT_PROVIDED, PROJECT_SETUP_STATUS} from '../services/contstant';
 
 
@@ -19,7 +20,14 @@ export default function ProjectPage(){
     const [showSpinner, setShowSpinner] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [projectStatus, setProjectStatus] = useState("");
+    const [phaseList, setPhaseList] = useState([]);
     const navigate = useNavigate();
+
+    const heading = [
+      { key: "phaseName", label: "Phase Name" },
+      { key: "status", label: "Phase Status" },
+      { key: "totalEpics", label: "# Epics" }
+    ];
 
   
 
@@ -50,7 +58,7 @@ export default function ProjectPage(){
     async function getPhaseList(){
       try{
         setShowSpinner(true);
-        const response = await apiClientForAuthReq.get("/project/getPhaseList", {
+        const response = await apiClientForAuthReq.get("/phase/getPhaseList", {
           params: {projectId : id},
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -59,6 +67,16 @@ export default function ProjectPage(){
         if(response.status =="200"){
           setProjectName(response.data.projectName);
           setProjectStatus(response.data.projectStatus);
+          setPhaseList(
+            response.data.phaseList.map(function (phase) {
+              phase.phaseName = (
+                <Link to={"/Phase/" + phase._id} className="text-purple-400 text-sm hover:text-purple-500">
+                  {phase.phaseName}
+                </Link>
+              );
+              return phase;
+            })
+          );
         }
       }catch(error){
         setPopupMessage(error.message);
@@ -84,7 +102,7 @@ export default function ProjectPage(){
               <SearchBar />
             </div>
             <div className="pt-8">
-              <ActionBar textToShow={projectName}>
+              <ActionBar textToShow={`Project: ${projectName}`}>
                   <Button
                       labelToShow="Add Members"
                       className="button-background-grad"
@@ -98,7 +116,7 @@ export default function ProjectPage(){
               </ActionBar>
             </div>
             <div className="pt-8">
-                {PROJECT_SETUP_STATUS.has(projectStatus) ? <ProjectMessage projectStatus={projectStatus} projectId={id} /> : ''}
+                {PROJECT_SETUP_STATUS.has(projectStatus) ? <ProjectMessage projectStatus={projectStatus} projectId={id} /> : <Table header={heading} rowList={phaseList} />}
             </div>
           </div>
       </div>

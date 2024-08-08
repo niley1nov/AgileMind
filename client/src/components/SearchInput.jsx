@@ -8,9 +8,9 @@ export default function SearchInput(param){
 
    useEffect(()=>{
       setSuggestions([]);
-      setInputValue("");
+      setInputValue(param.value ? param.value : "");
       setIsValueSelected(false);
-   },[])
+   },[param])
 
    useEffect(()=>{
       if(!isValueSelected && !param.readOnly){
@@ -77,6 +77,6 @@ export default function SearchInput(param){
       )}
      </div>
     );
- }
+}
 
 
