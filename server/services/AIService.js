@@ -435,7 +435,7 @@ Input (A list of questions for project phase refinement):
 		try {
 			// Sends the current phase details and discussion to the model and awaits the refined structure.
 			const phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
-			
+
 			// Prepares the refined structure for conversion into JSON.
 			const chatMessageToJsonify = `Convert below software project phase structure document into JSON structure.
 Remove unnecessary prefix like Story 2.1, Epic 1, Task 3, Phase 1. Keep the actual name for items. Example: Phase 1: Project Setup and Core Backend Development -> Project Setup and Core Backend Development

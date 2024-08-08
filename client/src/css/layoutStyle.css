@@ -1,12 +1,12 @@
-.background-grd-color{
-    background: linear-gradient(106.9deg, #1D1B20 41.43%, #3F0D50 59.28%, #BF3D73 84.26%, #7E1499 106.56%);
+.background-grd-color {
+	background: linear-gradient(106.9deg, #1D1B20 41.43%, #3F0D50 59.28%, #BF3D73 84.26%, #7E1499 106.56%);
 }
 
-.button-background-grad{
-    background: linear-gradient(111.09deg, #1D1B20 -19.16%, #3F0D50 10.5%, #BF3D73 52.03%, #7E1499 89.08%);
+.button-background-grad {
+	background: linear-gradient(111.09deg, #1D1B20 -19.16%, #3F0D50 10.5%, #BF3D73 52.03%, #7E1499 89.08%);
 }
 
-.welcome-text-color{
-    color: #7E1499;
+.welcome-text-color {
+	color: #7E1499;
 
 }
