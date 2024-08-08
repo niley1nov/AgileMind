@@ -11,7 +11,7 @@ export default function Navbar() {
       <div className="flex flex-col justify-between items-center h-full">
         <div className="cursor-pointer">
           <svg
-            className="h-8 w-8 hover:bg-gray-700"
+            className="h-8 w-8"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -31,7 +31,7 @@ export default function Navbar() {
         <div className="flex flex flex-col justify-between items-center space-y-7">
           <div className="cursor-pointer">
             <svg
-              className="h-6 w-6 hover:bg-gray-700"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -46,7 +46,7 @@ export default function Navbar() {
           </div>
           <div className="cursor-pointer">
             <svg
-              className="h-6 w-6 hover:bg-gray-700"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -61,7 +61,7 @@ export default function Navbar() {
           </div>
           <div className="cursor-pointer">
             <img
-              className="w-8 h-8 rounded-full hover:bg-gray-700"
+              className="w-8 h-8 rounded-full"
               src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             />
           </div>
