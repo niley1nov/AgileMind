@@ -28,6 +28,7 @@ export default function QuestionsPage() {
 	}, []);
 
 	async function getQuestionList() {
+		console.log('getQuestionList');
 		try {
 			setShowSpinner(true);
 			let response = {};
@@ -43,6 +44,7 @@ export default function QuestionsPage() {
 				);
 				getDummyAnswers();
 			} else {
+				console.log('else');
 				response = await apiClientForAuthReq.get(
 					"/questions/getPhaseLevelQuestions",
 					{
@@ -69,29 +71,35 @@ export default function QuestionsPage() {
 	}
 
 	async function getDummyAnswers() {
-		let response = {};
-		if (type == QUESTION_FUNCTIONAL || type == QUESTION_TECHNICAL) {
-			response = await apiClientForAuthReq.get(
-				"/answers/getProjectLevelAnswers",
-				{
-					params: { projectId: id, type: type },
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
-		} else {
-			response = await apiClientForAuthReq.get(
-				"/answers/getPhaseLevelAnswers",
-				{
-					params: { phaseId: id },
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
+		try {
+			let response = {};
+			if (type == QUESTION_FUNCTIONAL || type == QUESTION_TECHNICAL) {
+				response = await apiClientForAuthReq.get(
+					"/answers/getProjectLevelAnswers",
+					{
+						params: { projectId: id, type: type },
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					}
+				);
+			} else {
+				response = await apiClientForAuthReq.get(
+					"/answers/getPhaseLevelAnswers",
+					{
+						params: { phaseId: id },
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					}
+				);
+			}
+			console.log('Answers - ');
+			console.log(response);
+		} catch(ex) {
+			console.log(ex);
 		}
-		console.log(response);
+		
 	}
 
 	async function onFormSubmit(data) {
