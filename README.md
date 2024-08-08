@@ -1,6 +1,6 @@
 # AgileMind
 
-Agilemind is an advanced AI-powered system designed to enhance the project management process. It leverages artificial intelligence to analyze Software Requirements Specifications (SRS) and generate comprehensive project implementation plans. This interactive platform simplifies the collaboration across various team roles, fostering a dynamic and efficient project management environment.
+Agilemind is an advanced AI-powered system designed to enhance the project management process. It leverages Gemini AI models to analyze Software Requirements Specifications (SRS) and generate comprehensive project implementation plans. This interactive platform simplifies the collaboration across various team roles, fostering a dynamic and efficient project management environment.
 
 ![userflow](https://github.com/user-attachments/assets/9428022e-23d5-428f-8a13-513d925bedc3)
 
