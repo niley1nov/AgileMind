@@ -1,5 +1,4 @@
 import { useEffect,useState } from "react";
-import SearchBar from "../components/SearchBar";
 import ActionBar from "../components/ActionBar";
 import Spinner from "../components/Spinner";
 import PopupMessage from "../components/PopupMessage";
@@ -7,6 +6,7 @@ import { apiClientForAuthReq } from "../services/apiService";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Table from "../components/Table";
 import Button from "../components/Button";
+import NavigationComponent from "../components/NavigationComponent";
 
 
 
@@ -76,7 +76,7 @@ export default function EpicPage(){
           <PopupMessage message={popupMessage}></PopupMessage>
           <div className="flex flex-col w-full h-full">
             <div className="pt-8">
-              <SearchBar />
+              <NavigationComponent pageName="Epic"/>
             </div>
             <div className="pt-8">
               <ActionBar textToShow={`Epic: ${epicName}`}>

@@ -9,6 +9,7 @@ import { useParams} from 'react-router-dom';
 import { apiClientForAuthReq } from "../services/apiService";
 import Button from "../components/Button";
 import RefectorStoryConfModal from "../components/RefectorStoryConfModal";
+import NavigationComponent from "../components/NavigationComponent";
 
 
 export default function StoryPage(){
@@ -80,7 +81,7 @@ export default function StoryPage(){
             <RefectorStoryConfModal showModal={showRefectorModal} onClose={onCloseModal}/>
             <div className="flex flex-col w-full h-full">
               <div className="pt-8">
-                  <SearchBar />
+                <NavigationComponent pageName="Story"/>
               </div>
               <div className="pt-8">
                   <ActionBar textToShow={`Story: ${storyDetails.storyName}`}>
