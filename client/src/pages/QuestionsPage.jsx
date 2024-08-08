@@ -28,7 +28,6 @@ export default function QuestionsPage() {
 	}, []);
 
 	async function getQuestionList() {
-		console.log('getQuestionList');
 		try {
 			setShowSpinner(true);
 			let response = {};
@@ -44,7 +43,6 @@ export default function QuestionsPage() {
 				);
 				getDummyAnswers();
 			} else {
-				console.log('else');
 				response = await apiClientForAuthReq.get(
 					"/questions/getPhaseLevelQuestions",
 					{
@@ -87,7 +85,8 @@ export default function QuestionsPage() {
 				response = await apiClientForAuthReq.get(
 					"/answers/getPhaseLevelAnswers",
 					{
-						params: { phaseId: id },
+						//wrong id here
+						params: { projectId: id, phaseId: id },
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem("token")}`,
 						},
@@ -99,7 +98,6 @@ export default function QuestionsPage() {
 		} catch(ex) {
 			console.log(ex);
 		}
-		
 	}
 
 	async function onFormSubmit(data) {

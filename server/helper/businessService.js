@@ -1,24 +1,26 @@
 import {
-    GoogleGenerativeAI
-  } from "@google/generative-ai";
-  import { models, getPrompts } from "../services/AIConfigData.js";
-  import config from "../config.js";
+	GoogleGenerativeAI
+} from "@google/generative-ai";
+import { models, getPrompts } from "../services/AIConfigData.js";
+import config from "../config.js";
 
-  class businessService {
-    constructor(srs) {
-        this.genAI = new GoogleGenerativeAI(config.GEMINI_API_TOKEN);
-        this.model = this.genAI.getGenerativeModel({
-          model: models["pro"],
-          systemInstruction: getPrompts("business_model", [srs]),
-        });
-        this.chatSession = model.startChat({
-          generationConfig: getGenConfig(0.8, "text/plain"),
-          history: [],
-        });
-    }
+class businessService {
+	constructor(srs) {
+		this.genAI = new GoogleGenerativeAI(config.GEMINI_API_TOKEN);
+		this.model = this.genAI.getGenerativeModel({
+			model: models["pro"],
+			systemInstruction: getPrompts("business_model", [srs]),
+		});
+		this.chatSession = model.startChat({
+			generationConfig: getGenConfig(0.8, "text/plain"),
+			history: [],
+		});
+	}
 
-    async chat(question) {
-      const result = await this.chatSession.sendMessage(question);
-      return result.response.text();
-    }
-  }
+	async chat(question) {
+		const result = await this.chatSession.sendMessage(question);
+		return result.response.text();
+	}
+}
+
+export default businessService;
