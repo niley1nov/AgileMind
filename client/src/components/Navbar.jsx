@@ -6,7 +6,6 @@ export default function Navbar() {
 	const navigate = useNavigate();
 	const [showPopup, setShowPopup] = useState(false);
 
-
 	function navigateToDashboard() {
 		navigate('/');
 	}
@@ -20,7 +19,7 @@ export default function Navbar() {
 			<div className="flex flex-col justify-between items-center h-full">
 				<div className="cursor-pointer">
 					<svg
-						className="h-8 w-8 hover:bg-gray-700"
+						className="h-8 w-8"
 						width="24"
 						height="24"
 						viewBox="0 0 24 24"
@@ -40,7 +39,7 @@ export default function Navbar() {
 				<div className="flex flex flex-col justify-between items-center space-y-7">
 					<div className="cursor-pointer">
 						<svg
-							className="h-6 w-6 hover:bg-gray-700"
+							className="h-6 w-6"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
@@ -55,7 +54,7 @@ export default function Navbar() {
 					</div>
 					<div className="cursor-pointer">
 						<svg
-							className="h-6 w-6 hover:bg-gray-700"
+							className="h-6 w-6"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
