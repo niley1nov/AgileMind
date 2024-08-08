@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import PopupMessage from "../components/PopupMessage";
 import { storyStatusOptions, storyConfidenceOption, moscowOptions } from "../services/selectOptions";
 import Spinner from "../components/Spinner";
+import {useNavigate } from 'react-router-dom';
+
 
 
 
@@ -19,6 +21,7 @@ const StoryInputs = memo(
         const [isEditable, setIsEditable] = useState(false);
         const [storyData, setStoryData] = useState({});
         const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+        const navigate = useNavigate();
 
 
         useEffect(function () {
@@ -85,6 +88,7 @@ const StoryInputs = memo(
                 });
                 if (response.status == "200") {
                     setIsEditable(false);
+                    navigate('/Story/'+storyId);
                 }
 
             } catch (e) {

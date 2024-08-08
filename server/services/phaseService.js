@@ -245,7 +245,8 @@ async function createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaD
                 phaseId: phaseId,
                 seqNumber: index + 1,
                 epicData: epic.data,
-                storyDependencies : JSON.stringify(dependencies)
+                storyDependencies : JSON.stringify(dependencies),
+                notes: JSON.stringify(epic.notes)
             };
         }
     ));
