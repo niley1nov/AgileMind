@@ -2,6 +2,7 @@ import ProjectQuestion from "../models/ProjectQuestion.js";
 import { getProjectDocumentContent } from "../utilities/documentUtil.js";
 import { DOCUMENT_TYPE } from "../utilities/constant.js";
 import answerService from "../helper/answerService.js";
+import Phase from "../models/Phase.js";
 
 async function getProjectLevelAnswers(req, res) {
 	try {
@@ -32,8 +33,9 @@ async function getProjectLevelAnswers(req, res) {
 
 async function getPhaseLevelAnswers(req, res) {
 	try {
-		const projectId = req.query.projectId;
 		const phaseId = req.query.phaseId;
+		const phaseRecord = await Phase.findOne({_id: phaseId});
+		const projectId = phaseRecord.projectId;
 
 		if (!phaseId) {
 			res.status(422).json({
@@ -51,7 +53,6 @@ async function getPhaseLevelAnswers(req, res) {
 					projectId,
 					DOCUMENT_TYPE.PROJECT_TECH_STRUCT
 				);
-			console.log(doc);
 			const projectTechStructure = JSON.parse(
 				await getProjectDocumentContent(
 					projectId,
@@ -70,10 +71,9 @@ async function getPhaseLevelAnswers(req, res) {
 			);
 			const answersList = [];
 			for(let question of questionsList) {
-				const answer = JSON.parse(await service.chat(question.question));
+				const answer = await service.chat(question.question);
 				answersList.push(answer);
 			}
-			console.log(answersList);
 			res.json(answersList);
 		}
 	} catch (err) {

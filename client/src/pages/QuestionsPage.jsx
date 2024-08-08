@@ -86,7 +86,7 @@ export default function QuestionsPage() {
 					"/answers/getPhaseLevelAnswers",
 					{
 						//wrong id here
-						params: { projectId: id, phaseId: id },
+						params: { phaseId: id },
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem("token")}`,
 						},

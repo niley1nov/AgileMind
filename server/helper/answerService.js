@@ -3,6 +3,7 @@ import {
 } from "@google/generative-ai";
 import { models, getPrompts } from "../services/AIConfigData.js";
 import config from "../config.js";
+import { getGenConfig } from "../utilities/AIUtil.js";
 
 class answerService {
 	constructor(
@@ -14,7 +15,7 @@ class answerService {
 			model: models["pro"],
 			systemInstruction: getPrompts("answer_model", [JSON.stringify(projectFunStructureDetailed), JSON.stringify(projectTechnicalStructure)]),
 		});
-		this.chatSession = model.startChat({
+		this.chatSession = this.model.startChat({
 			generationConfig: getGenConfig(0.8, "text/plain"),
 			history: [],
 		});
