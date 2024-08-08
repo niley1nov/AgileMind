@@ -1,7 +1,7 @@
 import {
     GoogleGenerativeAI
   } from "@google/generative-ai";
-  import { models, getPrompts } from "./AIConfigData.js";
+  import { models, getPrompts } from "../services/AIConfigData.js";
   import config from "../config.js";
 
   class answerService {

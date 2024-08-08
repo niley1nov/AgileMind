@@ -1,15 +1,15 @@
 import {
     GoogleGenerativeAI
   } from "@google/generative-ai";
-  import { models, getPrompts } from "./AIConfigData.js";
+  import { models, getPrompts } from "../services/AIConfigData.js";
   import config from "../config.js";
 
-  class businessService {
+  class techService {
     constructor(srs) {
         this.genAI = new GoogleGenerativeAI(config.GEMINI_API_TOKEN);
         this.model = this.genAI.getGenerativeModel({
           model: models["pro"],
-          systemInstruction: getPrompts("business_model", [srs]),
+          systemInstruction: getPrompts("tech_model", [srs]),
         });
         this.chatSession = model.startChat({
           generationConfig: getGenConfig(0.8, "text/plain"),
