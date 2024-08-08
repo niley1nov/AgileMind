@@ -13,6 +13,8 @@ import "../css/dependencyGraph.css";
 import {useParams} from 'react-router-dom';
 import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
+import NavigationComponent from "../components/NavigationComponent";
+
 
 
 const connectionLineStyle = { stroke: "#fff" };
@@ -178,7 +180,7 @@ const DependencyGraphPage = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
               }
             });
-            if(response.status =="200"){
+            if(response.status =="200" && Object.keys(modelOutput).length === 0){
                 setEpicName(response.data.epicName);
                 setModelOutput(response.data.storyDependencies);
             }
@@ -214,6 +216,9 @@ const DependencyGraphPage = () => {
                 <div className="px-20 text-white">
                 <PopupMessage message={popupMessage}></PopupMessage>
                     <div className="flex flex-col w-full h-full">
+                        <div className="pt-8">
+                            <NavigationComponent pageName="Epic"/>
+                        </div>
                         <div className="pt-8">
                             <ActionBar textToShow={`Epic: ${epicName}`}>
                             </ActionBar>

@@ -1,5 +1,4 @@
 import { useEffect,memo,useState,useCallback } from "react";
-import SearchBar from "../components/SearchBar";
 import ActionBar from "../components/ActionBar";
 import Button from "../components/Button";
 import AssignMemberModal from "../components/AssignMemberModal";
@@ -10,6 +9,7 @@ import { apiClientForAuthReq } from "../services/apiService";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Table from "../components/Table";
 import {PROJECT_STATUS_CREATED, PROJECT_STATUS_WAITING_FOR_INPUT, PROJECT_STATUS_INPUT_PROVIDED, PROJECT_SETUP_STATUS} from '../services/contstant';
+import NavigationComponent from "../components/NavigationComponent";
 
 
 
@@ -99,7 +99,7 @@ export default function ProjectPage(){
           <ViewAssignmentModal showModal={openViewAssignmentModal} onClose={closeViewAssignment}/>
           <div className="flex flex-col w-full h-full">
             <div className="pt-8">
-              <SearchBar />
+              <NavigationComponent pageName="Project"/>
             </div>
             <div className="pt-8">
               <ActionBar textToShow={`Project: ${projectName}`}>

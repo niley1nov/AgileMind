@@ -43,7 +43,7 @@ async function getPhaseLevelQuestions(req, res) {
       const questionsList = await ProjectQuestion.find({
         phaseId: phaseId,
       })
-        .select("_id question seqNumber answer type answerGivenBy")
+        .select("_id question seqNumber answer type answerGivenBy subtype")
         .sort({ seqNumber: 1 });
       res.json(questionsList);
     }
