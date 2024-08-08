@@ -49,10 +49,6 @@ async function getPhaseLevelAnswers(req, res) {
 				.select("_id question seqNumber answer type answerGivenBy")
 				.sort({ seqNumber: 1 });
 			
-			const doc =	await getProjectDocumentContent(
-					projectId,
-					DOCUMENT_TYPE.PROJECT_TECH_STRUCT
-				);
 			const projectTechStructure = JSON.parse(
 				await getProjectDocumentContent(
 					projectId,
