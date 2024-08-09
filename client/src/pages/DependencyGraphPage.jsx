@@ -15,8 +15,6 @@ import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
 import NavigationComponent from "../components/NavigationComponent";
 
-
-
 const connectionLineStyle = { stroke: "#fff" };
 const snapGrid = [20, 20];
 const nodeTypes = { textinput: TextNode };
