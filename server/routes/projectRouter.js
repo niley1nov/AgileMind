@@ -1,13 +1,41 @@
 import express from "express";
-import { verifyUser } from '../middlewares/verifyUser.js';
-import { validateProjectDetails, validateProjectAssignmentDetails } from "../middlewares/validate.js";
-import { createProject, getAssignedProjectList, createProjectAssignment, getProjectAssignments } from "../controllers/projectController.js";
+import {
+	verifyUser,
+	authorizationMiddleware,
+} from "../middlewares/verifyUser.js";
+import {
+	validateProjectDetails,
+	validateProjectAssignmentDetails,
+} from "../middlewares/validate.js";
+import {
+	createProject,
+	getAssignedProjectList,
+	createProjectAssignment,
+	getProjectAssignments,
+} from "../controllers/projectController.js";
+import { ALL_ROLE, USER_ROLE } from "../utilities/constant.js";
 
 const router = express.Router();
 
-router.post("/createProject", verifyUser, validateProjectDetails, createProject);
+router.post(
+	"/createProject",
+	verifyUser,
+	validateProjectDetails,
+	createProject
+);
 router.get("/getAssignedProjects", verifyUser, getAssignedProjectList);
-router.post("/createProjectAssignment", verifyUser, validateProjectAssignmentDetails, createProjectAssignment);
-router.get("/getProjectAssignments", verifyUser, getProjectAssignments);
+router.post(
+	"/createProjectAssignment",
+	verifyUser,
+	authorizationMiddleware("Project", [USER_ROLE.MANAGER]),
+	validateProjectAssignmentDetails,
+	createProjectAssignment
+);
+router.get(
+	"/getProjectAssignments",
+	verifyUser,
+	authorizationMiddleware("Project", ALL_ROLE),
+	getProjectAssignments
+);
 
 export default router;
