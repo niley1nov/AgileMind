@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyUser } from "../middlewares/verifyUser.js";
+import { verifyUser, authorizationMiddleware } from "../middlewares/verifyUser.js";
 import {
 	getProjectLevelQuestions,
 	getPhaseLevelQuestions,
@@ -7,11 +7,13 @@ import {
 	submitQuestions
 } from "../controllers/questionsController.js";
 import { validateUpdateAnswersDetails, validateSubmitQuestionsDetails } from "../middlewares/validate.js";
+import {ALL_ROLE} from '../utilities/constant.js';
+
 
 const router = express.Router();
 
-router.get("/getProjectLevelQuestions", verifyUser, getProjectLevelQuestions);
-router.get("/getPhaseLevelQuestions", verifyUser, getPhaseLevelQuestions);
+router.get("/getProjectLevelQuestions", authorizationMiddleware('Project',ALL_ROLE),  verifyUser, getProjectLevelQuestions);
+router.get("/getPhaseLevelQuestions", authorizationMiddleware('Phase',ALL_ROLE), verifyUser, getPhaseLevelQuestions);
 
 router.post(
 	"/updateQuestionAnswers",

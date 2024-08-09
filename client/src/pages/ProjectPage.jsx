@@ -21,6 +21,8 @@ export default function ProjectPage() {
 	const [projectName, setProjectName] = useState("");
 	const [projectStatus, setProjectStatus] = useState("");
 	const [phaseList, setPhaseList] = useState([]);
+	const [isUserManager, setIsUserManager] = useState(false);
+
 	const navigate = useNavigate();
 
 	const heading = [
@@ -77,6 +79,7 @@ export default function ProjectPage() {
 						return phase;
 					})
 				);
+				setIsUserManager(response.data.isProjectManager);
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
@@ -102,11 +105,15 @@ export default function ProjectPage() {
 				</div>
 				<div className="pt-8">
 					<ActionBar textToShow={`Project: ${projectName}`}>
-						<Button
+						{isUserManager ?
+							<Button
 							labelToShow="Add Members"
 							className="button-background-grad"
 							onClick={openAssignmentModal}
-						/>
+							/> 
+							:
+							""
+						}
 						<Button
 							labelToShow="View Members"
 							className="button-background-grad"

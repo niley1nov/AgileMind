@@ -15,7 +15,7 @@ export default function ViewAssignmentModal({ showModal, onClose }) {
 
 	useEffect(function () {
 		getAssignmentRecords();
-	}, []);
+	}, [showModal]);
 
 	if (!showModal) return null;
 
