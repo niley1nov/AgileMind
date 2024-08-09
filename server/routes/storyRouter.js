@@ -8,5 +8,4 @@ router.get("/getStoryDetails", verifyUser, getStoryDetails);
 router.post("/updateStoryDetails", verifyUser, validateUpdateStoryDetails, updateStoryDetails);
 router.post("/requestForStoryRefectoring", verifyUser, validateStoryRefectorReqDetails, requestForStoryRefectoring);
 
-
 export default router;

@@ -68,7 +68,6 @@ function validateProjectDetails(req, res, next) {
 	}
 }
 
-
 function validateProjectAssignmentDetails(req, res, next) {
 	const projectAssignemtSchema = zod.object({
 		userRole: zod.string().refine(
