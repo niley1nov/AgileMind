@@ -29,7 +29,7 @@ export default function EpicPage() {
 	}, []);
 
 	function navigateToDependancyGraph() {
-		navigate('/Dependency/' + id);
+		window.open('/Dependency/' + id, '_blank');
 	}
 
 	async function getStoryList() {
@@ -55,8 +55,7 @@ export default function EpicPage() {
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
-			setTimeout(function () { setPopupMessage("") }, 2000);
-			//navigate("/login");
+			setTimeout(function () { setPopupMessage("");navigate("/login"); }, 2000);
 			return [];
 		} finally {
 			setShowSpinner(false);

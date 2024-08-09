@@ -9,7 +9,7 @@ import PopupMessage from "../components/PopupMessage";
 import Spinner from "../components/Spinner";
 import { useState } from "react";
 import { roleOptions } from "../services/selectOptions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 
 export default function RegistrationPage() {
@@ -24,9 +24,9 @@ export default function RegistrationPage() {
 	const [showSpinner, setShowSpinner] = useState(false);
 	const navigate = useNavigate();
 
-	const password = watch("password");
 
 	function validatePassword(value) {
+		const password = watch("password");
 		return value === password || "Passwords do not match";
 	}
 
@@ -47,7 +47,7 @@ export default function RegistrationPage() {
 	}
 
 	return (
-		<div className="grid md:grid-cols-2 grid-cols-1 pt-24">
+		<div className="grid xl:grid-cols-2 grid-cols-1 pt-24">
 			<Spinner showSpinner={showSpinner} />
 			<PopupMessage message={popupMessage}></PopupMessage>
 			<form
@@ -58,7 +58,7 @@ export default function RegistrationPage() {
 					Get Registered
 					<br /> With Us
 				</h1>
-				<div className="grid md:grid-cols-2 grid-cols-1 gap-x-8 gap-y-4">
+				<div className="grid xl:grid-cols-2 grid-cols-1 gap-x-8 gap-y-4">
 					<TextInput
 						labelToShow="First Name"
 						elementName="firstName"
@@ -132,6 +132,13 @@ export default function RegistrationPage() {
 						Register
 					</button>
 				</center>
+				<div className="text-center text-sm">
+						Back to
+						<Link className="hover:underline" to="/login">
+							{" "}
+							log in
+						</Link>
+					</div>
 			</form>
 			<div className="place-self-center">
 				<div className="w-96 h-96 overflow-hidden">
