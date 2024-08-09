@@ -20,7 +20,7 @@ function validateRegistrationDetails(req, res, next) {
 	const result = userSchema.safeParse(userDetail);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -34,7 +34,7 @@ function validateLoginDetails(req, res, next) {
 	const result = userSchema.safeParse(userDetail);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -63,11 +63,10 @@ function validateProjectDetails(req, res, next) {
 	const result = projectSchema.safeParse(projectDetails);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
-
 
 function validateProjectAssignmentDetails(req, res, next) {
 	const projectAssignemtSchema = zod.object({
@@ -89,7 +88,7 @@ function validateProjectAssignmentDetails(req, res, next) {
 	const result = projectAssignemtSchema.safeParse(projectAssignmetDetails);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -106,7 +105,7 @@ function validateUpdateAnswersDetails(req, res, next) {
 	const result = questionAnswerSchema.safeParse(questionAnswerDetails);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -126,7 +125,7 @@ function validateSubmitQuestionsDetails(req, res, next) {
 	const result = questionAnswerSchema.safeParse(questionAnswerDetails);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -138,7 +137,7 @@ function validateUpdateStoryDetails(req, res, next) {
 		qaOwnerEmail: zod.union([zod.string().email(), zod.string().length(0)]),
 		storyStatus: zod.string().refine(
 			(status) => {
-				const statusList = ["","Planned","Assigned","In Progress","Blocked","Backlog","Completed"];
+				const statusList = ["", "Planned", "Assigned", "In Progress", "Blocked", "Backlog", "Completed"];
 				return statusList.includes(status);
 			},
 			{
@@ -147,7 +146,7 @@ function validateUpdateStoryDetails(req, res, next) {
 		),
 		confidence: zod.string().refine(
 			(confidence) => {
-				const confidenceList = ["high", "medium","low"];
+				const confidenceList = ["high", "medium", "low"];
 				return confidenceList.includes(confidence);
 			},
 			{
@@ -172,7 +171,7 @@ function validateUpdateStoryDetails(req, res, next) {
 	const result = storyDetailSchema.safeParse(storyDetails);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
@@ -185,7 +184,7 @@ function validateStoryRefectorReqDetails(req, res, next) {
 	const result = reqDetailSchema.safeParse(reqDetail);
 	if (!result.success) {
 		res.status(422).json({ error: result.error });
-	}else{
+	} else {
 		next();
 	}
 }
