@@ -40,7 +40,7 @@ export default function LoginPage() {
 	}
 
 	return (
-		<div className="grid md:grid-cols-2 grid-cols-1 pt-24">
+		<div className="grid lg:grid-cols-2 grid-cols-1 pt-24">
 			<Spinner showSpinner={showSpinner} />
 			<PopupMessage message={popupMessage}></PopupMessage>
 			<div>

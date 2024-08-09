@@ -11,7 +11,7 @@ import Spinner from "../components/Spinner";
 import { useNavigate } from 'react-router-dom';
 
 const StoryInputs = memo(
-	function StoryInputs({ storyInputDetails, storyId }) {
+	function StoryInputs({ storyInputDetails, storyId, setShowRefectorButton }) {
 
 		const [showSpinner, setShowSpinner] = useState(false);
 		const [popupMessage, setPopupMessage] = useState("");
@@ -62,7 +62,7 @@ const StoryInputs = memo(
 				}
 			} catch (error) {
 				setPopupMessage(error.message);
-				setTimeout(function () { setPopupMessage("") }, 2000);
+				setTimeout(function () { setPopupMessage(""); }, 2000);
 				return [];
 			}
 		}
@@ -84,12 +84,16 @@ const StoryInputs = memo(
 				});
 				if (response.status == "200") {
 					setIsEditable(false);
-					navigate('/Story/' + storyId);
+					if(response.data.updatedStory.storyPoint > 8 || response.data.updatedStory.confidence === 'low'){
+						setShowRefectorButton(true);
+					}else{
+						setShowRefectorButton(false);
+					}
 				}
 
 			} catch (e) {
 				setPopupMessage(e.message);
-				setTimeout(function () { setPopupMessage("") }, 2000);
+				setTimeout(function () { setPopupMessage(""); }, 2000);
 			} finally {
 				setShowSpinner(false);
 			}

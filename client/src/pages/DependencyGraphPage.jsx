@@ -98,8 +98,8 @@ const DependencyGraphPage = () => {
 		getEpicRelatedData();
 		const roots = [];
 		const predOf = {};
-		const xTopology = {};
-		const yTopology = {};
+		let xTopology = {};
+		let yTopology = {};
 		const yt = {};
 
 		for (const story in modelOutput) {
