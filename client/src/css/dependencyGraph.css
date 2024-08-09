@@ -97,6 +97,22 @@
 	border-radius: 100%;
 }
 
+.gradient.normal:before {
+	background: conic-gradient(from -160deg at 50% 50%,
+			#dd527e 0deg,
+			#c457da 120deg,
+			#3b86db 240deg,
+			#dd527e 360deg);
+}
+
+.gradient.highlighted:before {
+	background: conic-gradient(from -160deg at 50% 50%,
+			#f7e99e 0deg,
+			#f5a96e 120deg,
+			#6de9ed 240deg,
+			#f7e99e 360deg);
+}
+
 .react-flow__minimap .textinput {
 	fill: rgb(208, 192, 247);
 }

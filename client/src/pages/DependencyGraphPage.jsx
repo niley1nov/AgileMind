@@ -86,39 +86,66 @@ const DependencyGraphPage = () => {
 		return distances;
 	}
 
+	function createMatrix(rows, cols) {
+		let matrix = [];
+		for (let i = 0; i < rows; i++) {
+			matrix.push(Array(cols).fill(null));
+		}
+		return matrix;
+	}
 
 	useEffect(() => {
 		getEpicRelatedData();
 		const roots = [];
 		const predOf = {};
+		const xTopology = {};
+		const yTopology = {};
+		const yt = {};
+
 		for (const story in modelOutput) {
 			if (modelOutput[story].deps.length === 0) {
 				roots.push(story);
 			}
-			predOf[story] = [];
-		}
-
-		for (const story in modelOutput) {
+			predOf[story] = predOf[story] || [];
 			for (const dep of modelOutput[story].deps) {
-				if (!predOf[dep]) {
-					predOf[dep] = [];
-				}
+				predOf[dep] = predOf[dep] || [];
 				predOf[dep].push([story, modelOutput[dep].points]);
 			}
 		}
 
-		const xTopology = findLongestPaths(predOf, roots);
-
-		const yTopology = {};
-		const yt = {};
+		xTopology = findLongestPaths(predOf, roots);
 
 		for (let story in modelOutput) {
-			if (!yt[xTopology[story]]) {
-				yt[xTopology[story]] = 1;
+			if (yt[xTopology[story]] == null) {
+				yt[xTopology[story]] = 0;
 			} else {
 				yt[xTopology[story]] += 1;
 			}
 			yTopology[story] = yt[xTopology[story]];
+		}
+
+		const m = Math.max(...Object.values(xTopology)) + 1;
+		const n = Math.max(...Object.values(yTopology)) + 3;
+		const matrix = createMatrix(m, n);
+
+		for (const story in modelOutput) {
+			matrix[xTopology[story]][yTopology[story]] = story;
+		}
+
+		for (let i = 1; i < matrix.length; i++) {
+			if (matrix[i][0] != null) {
+				for (let j = 0; j < matrix[0].length; j++) {
+					if (matrix[i][j] != null && matrix[i - 1][j] != null) {
+						for (let k = 0; k < matrix[0].length; k++) {
+							if (matrix[i - 1][k] == null && matrix[i][k] == null) {
+								matrix[i][k] = matrix[i][j];
+								matrix[i][j] = null;
+								yTopology[matrix[i][k]] = k;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		const nodes = [];
@@ -140,7 +167,7 @@ const DependencyGraphPage = () => {
 				id: String(i),
 				type: "textinput",
 				data: { label: story, points: modelOutput[story].points },
-				position: { x: 100 * xTopology[story], y: 150 * yTopology[story] },
+				position: { x: 100 * xTopology[story], y: 160 * yTopology[story] },
 			};
 			if (source !== "") {
 				node["sourcePosition"] = source;
@@ -169,6 +196,34 @@ const DependencyGraphPage = () => {
 		setEdges(edges);
 	}, [modelOutput]);
 
+	const handleNodeClick = (event, clickedNode) => {
+		const isCurrentlyHighlighted = clickedNode.data.highlighted;
+
+		const newNodes = nodes.map((node) => {
+			if (node.id === clickedNode.id) {
+				return {
+					...node,
+					data: {
+						...node.data,
+						highlighted: !isCurrentlyHighlighted,
+					},
+				};
+			} else {
+				const isPredecessor = edges.some(
+					(edge) => edge.target === clickedNode.id && edge.source === node.id
+				);
+				return {
+					...node,
+					data: {
+						...node.data,
+						highlighted: isPredecessor && !isCurrentlyHighlighted,
+					},
+				};
+			}
+		});
+
+		setNodes(newNodes);
+	};
 
 	async function getEpicRelatedData() {
 		try {
@@ -205,6 +260,7 @@ const DependencyGraphPage = () => {
 			onConnect={onConnect}
 			className="bg-neutral-900"
 			nodeTypes={nodeTypes}
+			onNodeClick={handleNodeClick}
 			connectionLineStyle={connectionLineStyle}
 			snapToGrid={true}
 			snapGrid={snapGrid}
