@@ -34,7 +34,7 @@ async function getProjectLevelAnswers(req, res) {
 async function getPhaseLevelAnswers(req, res) {
 	try {
 		const phaseId = req.query.phaseId;
-		const phaseRecord = await Phase.findOne({_id: phaseId});
+		const phaseRecord = await Phase.findOne({ _id: phaseId });
 		const projectId = phaseRecord.projectId;
 
 		if (!phaseId) {
@@ -48,7 +48,7 @@ async function getPhaseLevelAnswers(req, res) {
 			})
 				.select("_id question seqNumber answer type answerGivenBy")
 				.sort({ seqNumber: 1 });
-			
+
 			const projectTechStructure = JSON.parse(
 				await getProjectDocumentContent(
 					projectId,
@@ -66,7 +66,7 @@ async function getPhaseLevelAnswers(req, res) {
 				projectTechStructure
 			);
 			const answersList = [];
-			for(let question of questionsList) {
+			for (let question of questionsList) {
 				const answer = await service.chat(question.question);
 				answersList.push(answer);
 			}
