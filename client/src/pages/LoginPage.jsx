@@ -8,13 +8,11 @@ import { Link, useNavigate } from "react-router-dom";
 import PopupMessage from "../components/PopupMessage";
 import Spinner from "../components/Spinner";
 
-
 export default function LoginPage() {
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const [popupMessage, setPopupMessage] = useState("");
 	const [showSpinner, setShowSpinner] = useState(false);
 	const navigate = useNavigate();
-
 
 	async function onLoginFormSubmit(data) {
 		try {
@@ -30,7 +28,6 @@ export default function LoginPage() {
 			setTimeout(function () { setPopupMessage("") }, 2000);
 			setShowSpinner(false);
 		}
-
 
 		apiClientForUnAuthReq
 			.post("/auth/login", data)

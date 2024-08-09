@@ -20,7 +20,6 @@ const StoryInputs = memo(
 		const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 		const navigate = useNavigate();
 
-
 		useEffect(function () {
 			setStoryData(storyInputDetails);
 			setValuesForInputs(storyInputDetails);
@@ -104,7 +103,6 @@ const StoryInputs = memo(
 				[name]: value
 			}));
 		};
-
 
 		return (
 			<div className="w-full pt-8 border border-gray-600 rounded-md focus:outline-none focus:ring-2 bg-transparent text-sm mt-8 mb-4">
@@ -223,8 +221,6 @@ const StoryInputs = memo(
 			</div>
 		);
 	}
-
 );
-
 
 export default StoryInputs;
