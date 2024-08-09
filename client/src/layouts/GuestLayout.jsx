@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-
 import '../css/layoutStyle.css';
 
 export default function GuestLayout() {
@@ -11,4 +10,3 @@ export default function GuestLayout() {
 		</div>
 	);
 }
-

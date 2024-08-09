@@ -11,8 +11,6 @@ const QUESTION_FUNCTIONAL = 'Functional';
 const QUESTION_TECHNICAL = 'Technical';
 const QUESTION_PHASE = 'Phase';
 
-
-
 export {
 	PROJECT_STATUS_CREATED,
 	PROJECT_STATUS_WAITING_FOR_INPUT,

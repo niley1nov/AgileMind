@@ -10,9 +10,6 @@ import { storyStatusOptions, storyConfidenceOption, moscowOptions } from "../ser
 import Spinner from "../components/Spinner";
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 const StoryInputs = memo(
 	function StoryInputs({ storyInputDetails, storyId }) {
 
@@ -22,7 +19,6 @@ const StoryInputs = memo(
 		const [storyData, setStoryData] = useState({});
 		const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 		const navigate = useNavigate();
-
 
 		useEffect(function () {
 			setStoryData(storyInputDetails);
@@ -107,7 +103,6 @@ const StoryInputs = memo(
 				[name]: value
 			}));
 		};
-
 
 		return (
 			<div className="w-full pt-8 border border-gray-600 rounded-md focus:outline-none focus:ring-2 bg-transparent text-sm mt-8 mb-4">
@@ -226,8 +221,6 @@ const StoryInputs = memo(
 			</div>
 		);
 	}
-
 );
-
 
 export default StoryInputs;

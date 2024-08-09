@@ -1,4 +1,3 @@
-
 export default function Spinner({ showSpinner }) {
 	if (!showSpinner) return null;
 	return (
@@ -7,4 +6,3 @@ export default function Spinner({ showSpinner }) {
 		</div>
 	);
 }
-

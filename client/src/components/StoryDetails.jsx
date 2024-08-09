@@ -1,6 +1,5 @@
 import { useEffect, memo } from "react";
 
-
 const StoryDetails = memo(
 	function StoryDetails({ description, tasks, epicName }) {
 		useEffect(function () {

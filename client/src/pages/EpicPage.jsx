@@ -8,8 +8,6 @@ import Table from "../components/Table";
 import Button from "../components/Button";
 import NavigationComponent from "../components/NavigationComponent";
 
-
-
 export default function EpicPage() {
 	const [popupMessage, setPopupMessage] = useState("");
 	const [showSpinner, setShowSpinner] = useState(false);
@@ -25,10 +23,7 @@ export default function EpicPage() {
 
 	];
 
-
-
 	const { id } = useParams();
-
 
 	useEffect(function () {
 		getStoryList();
@@ -37,7 +32,6 @@ export default function EpicPage() {
 	function navigateToDependancyGraph() {
 		navigate('/Dependency/' + id);
 	}
-
 
 	async function getStoryList() {
 		try {

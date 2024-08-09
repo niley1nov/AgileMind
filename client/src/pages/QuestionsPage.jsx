@@ -21,8 +21,6 @@ export default function QuestionsPage() {
 	const [showSpinner, setShowSpinner] = useState(false);
 	const navigate = useNavigate();
 
-
-
 	useEffect(function () {
 		getQuestionList();
 	}, []);
