@@ -38,7 +38,7 @@ export default function AssignMemberModal({ showModal, onClose }) {
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
-			setTimeout(function () { setPopupMessage("") }, 2000);
+			setTimeout(function () { setPopupMessage(""); }, 2000);
 			return [];
 		}
 	}
@@ -65,7 +65,7 @@ export default function AssignMemberModal({ showModal, onClose }) {
 			}
 		} catch (e) {
 			setPopupMessage(e.message);
-			setTimeout(function () { setPopupMessage("") }, 2000);
+			setTimeout(function () { setPopupMessage(""); }, 2000);
 		} finally {
 			setShowSpinner(false);
 		}

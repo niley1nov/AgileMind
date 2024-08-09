@@ -1,11 +1,10 @@
-import SearchBar from "../components/SearchBar";
 import ActionBar from "../components/ActionBar";
 import StoryDetails from "../components/StoryDetails";
 import StoryInputs from "../components/StoryInputs";
 import { useCallback, useEffect, useState } from "react";
 import PopupMessage from "../components/PopupMessage";
 import Spinner from "../components/Spinner";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { apiClientForAuthReq } from "../services/apiService";
 import Button from "../components/Button";
 import RefectorStoryConfModal from "../components/RefectorStoryConfModal";
@@ -19,8 +18,10 @@ export default function StoryPage() {
 	const [storyDetails, setStoryDetails] = useState({});
 	const [storyInputDetails, setStoryInputDetails] = useState({});
 	const [showRefectorModal, setShowRefectorModal] = useState(false);
+	const [showRefectorButton, setShowRefectorButton] = useState(false);
 
 	const { id } = useParams();
+	const navigate = useNavigate();
 
 	useEffect(function () {
 		getStoryDetails();
@@ -40,12 +41,13 @@ export default function StoryPage() {
 				//Write Your logic Here
 				setStoryDetails(response.data.storyDetails);
 				setStoryInputDetails(response.data.storyInputDetails);
-
+				if(response.data.storyInputDetails.storyPoint > 8 || response.data.storyInputDetails.confidence == 'low'){
+					setShowRefectorButton(true);
+				}
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
-			setTimeout(function () { setPopupMessage("") }, 2000);
-			//navigate("/login");
+			setTimeout(function () { setPopupMessage("");navigate("/login"); }, 2000);
 			return [];
 		} finally {
 			setShowSpinner(false);
@@ -85,7 +87,7 @@ export default function StoryPage() {
 				</div>
 				<div className="pt-8">
 					<ActionBar textToShow={`Story: ${storyDetails.storyName}`}>
-						{storyInputDetails.storyPoint > 8 || storyInputDetails.confidence == 'low' ?
+						{showRefectorButton ?
 							<Button
 								labelToShow="Refector Story"
 								className="button-background-grad"
@@ -97,7 +99,7 @@ export default function StoryPage() {
 				</div>
 				<div className="pt-8">
 					<StoryDetails description={storyDetails.description} tasks={toMarkdown(storyDetails.tasks)} epicName={storyDetails.epicName} />
-					<StoryInputs storyInputDetails={storyInputDetails} storyId={id} />
+					<StoryInputs storyInputDetails={storyInputDetails} setShowRefectorButton={setShowRefectorButton} storyId={id} />
 				</div>
 			</div>
 		</div>

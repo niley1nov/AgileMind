@@ -53,8 +53,9 @@ export default function Home() {
 				setPopupMessage(e.message);
 				setTimeout(function () {
 					setPopupMessage("");
+					navigate("/login");
 				}, 2000);
-				navigate("/login");
+				
 			})
 			.finally(() => {
 				setShowSpinner(false);

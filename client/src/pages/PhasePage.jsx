@@ -58,8 +58,7 @@ export default function PhasePage() {
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
-			setTimeout(function () { setPopupMessage("") }, 2000);
-			//navigate("/login");
+			setTimeout(function () { setPopupMessage("");navigate("/login"); }, 2000);
 			return [];
 		} finally {
 			setShowSpinner(false);

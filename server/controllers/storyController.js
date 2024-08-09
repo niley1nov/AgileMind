@@ -98,11 +98,12 @@ async function updateStoryDetails(req, res) {
 				moscow: storyDetails.moscow,
 				storyPoint: storyDetails.storyPoint,
 				remarks: storyDetails.reMarks,
-			}
+			},
+			{ new: true }
 		);
 		res.status(200).json({
 			status: "success",
-			Id: updatedStory._Id,
+			updatedStory: updatedStory,
 		});
 	} catch (err) {
 		console.log("Internal Server Error " + err.message);

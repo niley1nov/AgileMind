@@ -45,12 +45,12 @@ export default function NavigationComponent({ pageName }) {
 					navigationItems.map(function (item, index) {
 						return index === navigationItems.length - 1 ?
 							<>
-								<li>
+								<li className="truncate text-nowrap">
 									<span className="text-purple-300">{item.label}</span>
 								</li>
 							</> :
 							<>
-								<li>
+								<li className="truncate text-nowrap">
 									<Link key={index} to={item.link} className="text-purple-400 hover:text-purple-500">{item.label}</Link>
 								</li>
 								<li>
