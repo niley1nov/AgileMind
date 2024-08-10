@@ -144,7 +144,7 @@ export default function QuestionsPage() {
 			<div className="pt-8">
 				<ActionBar textToShow={`${type} Questions`}></ActionBar>
 			</div>
-			<div className="flex-grow p-4 space-y-4">
+			<div className="flex-grow p-4 space-y-4 mb-16">
 				<form onSubmit={handleSubmit(onFormSubmit)} id="questionsForm">
 					<div className="grid grid-cols-1 gap-x-8 gap-y-4">
 						{questionList.map(function (q, index) {
