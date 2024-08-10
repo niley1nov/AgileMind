@@ -61,5 +61,17 @@ async function getNavigationInfo(req, res) {
 	}
 }
 
+async function getUserInfo(req, res){
+	try{
+		res.json({userFirstName: req.user.firstName, userRole: req.user.role});
+	}catch (err) {
+		res.status(500).json({
+			status: "error",
+			message: "Internal Server Error " + err.message,
+		});
+	}
 
-export { getUserByEmail, getNavigationInfo };
+}
+
+
+export { getUserByEmail, getNavigationInfo, getUserInfo};

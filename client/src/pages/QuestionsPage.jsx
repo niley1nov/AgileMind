@@ -7,6 +7,9 @@ import { apiClientForAuthReq } from "../services/apiService";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
 import { QUESTION_FUNCTIONAL, QUESTION_TECHNICAL, QUESTION_PHASE } from "../services/contstant";
+import ActionBar from "../components/ActionBar";
+import NavigationComponent from "../components/NavigationComponent";
+
 
 export default function QuestionsPage() {
 	const {
@@ -132,15 +135,16 @@ export default function QuestionsPage() {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col px-20 text-white">
+		<div className="px-20 text-white">
 			<Spinner showSpinner={showSpinner} />
 			<PopupMessage message={popupMessage}></PopupMessage>
-			<div className="w-full py-2 fixed right-0 top-0 bg-neutral-900 border-b border-gray-600">
-				<center>
-					<h1 className="text-2xl font-bold">{type} Questions</h1>
-				</center>
+			<div className="pt-8 mt-4">
+				<NavigationComponent pageName={type=='Phase' ? type : 'Project'} />
 			</div>
-			<div className="flex-grow p-4 space-y-4 my-20">
+			<div className="pt-8">
+				<ActionBar textToShow={`${type} Questions`}></ActionBar>
+			</div>
+			<div className="flex-grow p-4 space-y-4">
 				<form onSubmit={handleSubmit(onFormSubmit)} id="questionsForm">
 					<div className="grid grid-cols-1 gap-x-8 gap-y-4">
 						{questionList.map(function (q, index) {
