@@ -139,7 +139,7 @@ export default function QuestionsPage() {
 			<Spinner showSpinner={showSpinner} />
 			<PopupMessage message={popupMessage}></PopupMessage>
 			<div className="pt-8 mt-4">
-				<NavigationComponent pageName={type=='Phase' ? type : 'Project'} />
+				<NavigationComponent pageName={`${type} Questions`} />
 			</div>
 			<div className="pt-8">
 				<ActionBar textToShow={`${type} Questions`}></ActionBar>
