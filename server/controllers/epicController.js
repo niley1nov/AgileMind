@@ -17,12 +17,38 @@ async function getStoryList(req, res) {
 					$sort: { seqNumber: 1 },
 				},
 				{
+					$lookup: {
+					  from: "users",
+					  localField: "devOwner",
+					  foreignField: "_id",
+					  as: "devUser"
+					}
+				},
+				{
+					$lookup: {
+					  from: "users",
+					  localField: "qaOwner",
+					  foreignField: "_id",
+					  as: "qaUser"
+					}
+				},
+				{
 					$project: {
 						_id: 1,
 						storyName: 1,
 						status: 1,
-						devOwner: 'Not Yet Assigned',
-						qaOwner: 'Not Yet Assigned'
+						devOwner: {
+							$ifNull: [
+							  { $arrayElemAt: ["$devUser.firstName", 0] },
+							  "Not Yet Assigned"
+							]
+						},
+						qaOwner: {
+							$ifNull: [
+							  { $arrayElemAt: ["$qaUser.firstName", 0] },
+							  "Not Yet Assigned"
+							]
+						}
 					}
 				}
 			]

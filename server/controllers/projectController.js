@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import ProjectFile from "../models/ProjectFile.js";
 import { formatDate } from "../utilities/formatUtil.js";
 import mongoose from "mongoose";
+import { USER_ROLE } from "../utilities/constant.js";
 
 async function createProject(req, res) {
 	try {
@@ -41,7 +42,6 @@ async function getAssignedProjectList(req, res) {
 	try {
 		const assignments = await ProjectAssignment.find({ userId: req.user._id });
 		const projectIds = assignments.map((assignment) => assignment.projectId);
-		//const projects = await Project.find({ _id: { $in: projectIds } });
 
 		const projectList = await Project.aggregate(
 			[
@@ -69,7 +69,7 @@ async function getAssignedProjectList(req, res) {
 				}
 			]
 		);
-		const projectRes = projectList.map(function (project) {
+		const projects = projectList.map(function (project) {
 			let projectWrapper = {};
 			projectWrapper._id = project._id;
 			projectWrapper.projectName = project.projectName;
@@ -79,6 +79,7 @@ async function getAssignedProjectList(req, res) {
 			projectWrapper.totalPhase = project.phaseCount;
 			return projectWrapper;
 		});
+		const projectRes = {projectList: projects, isProjectManager: (req.user.role == USER_ROLE.MANAGER)}
 		res.json(projectRes);
 	} catch (err) {
 		res.status(500).json({

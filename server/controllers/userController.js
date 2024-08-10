@@ -26,6 +26,16 @@ async function getNavigationInfo(req, res) {
 		let recordId = req.query.id;
 		let pageName = req.query.pageName;
 		const navigationList = [];
+
+		if(pageName == 'Functional Questions' || pageName == 'Technical Questions'){
+			navigationList.unshift({ label: pageName, link: null });
+			pageName = 'Project';
+		}
+		if(pageName == 'Phase Questions'){
+			navigationList.unshift({ label: pageName, link: null });
+			pageName = 'Phase';
+		}
+
 		if (pageName == 'Story') {
 			const storyData = await Story.findOne({ _id: recordId });
 			navigationList.unshift({ label: 'Story: ' + storyData.storyName, link: null });
@@ -61,5 +71,17 @@ async function getNavigationInfo(req, res) {
 	}
 }
 
+async function getUserInfo(req, res){
+	try{
+		res.json({userFirstName: req.user.firstName, userRole: req.user.role});
+	}catch (err) {
+		res.status(500).json({
+			status: "error",
+			message: "Internal Server Error " + err.message,
+		});
+	}
 
-export { getUserByEmail, getNavigationInfo };
+}
+
+
+export { getUserByEmail, getNavigationInfo, getUserInfo};

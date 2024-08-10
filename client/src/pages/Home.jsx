@@ -14,6 +14,7 @@ export default function Home() {
 	const [popupMessage, setPopupMessage] = useState("");
 	const [showSpinner, setShowSpinner] = useState(false);
 	const [projectList, setProjectList] = useState([]);
+	const [isUserManager, setIsUserManager] = useState(false);
 	const navigate = useNavigate();
 	const heading = [
 		{ key: "projectName", label: "Project Name" },
@@ -38,7 +39,7 @@ export default function Home() {
 			.then(function (response) {
 				if (response.status == "200") {
 					setProjectList(
-						response.data.map(function (project) {
+						response.data.projectList.map(function (project) {
 							project.projectName = (
 								<Link to={"/Project/" + project._id} className="text-purple-400 text-sm hover:text-purple-500">
 									{project.projectName}
@@ -47,6 +48,7 @@ export default function Home() {
 							return project;
 						})
 					);
+					setIsUserManager(response.data.isProjectManager);
 				}
 			})
 			.catch(function (e) {
@@ -89,7 +91,7 @@ export default function Home() {
 				</div>
 				<div className="pt-8">
 					<ActionBar textToShow="Dashboard">
-						{projectList.length > 0 ? (
+						{projectList.length > 0 && isUserManager ? (
 							<Button
 								labelToShow="Create Project"
 								className="button-background-grad"
@@ -102,7 +104,7 @@ export default function Home() {
 				</div>
 				<div className="pt-8">
 					{projectList.length == 0 ? (
-						<WelcomeMessage onClickCallBack={openCreateProjectModal} />
+						<WelcomeMessage onClickCallBack={openCreateProjectModal} isUserManager={isUserManager}/>
 					) : (
 						<Table header={heading} rowList={projectList} />
 					)}
@@ -112,22 +114,32 @@ export default function Home() {
 	);
 }
 
-const WelcomeMessage = memo(function WelcomeMessage({ onClickCallBack }) {
+const WelcomeMessage = memo(function WelcomeMessage({ onClickCallBack, isUserManager}) {
 	return (
 		<div className="flex flex-col pt-16">
 			<div className="place-self-center text-3xl font-bold mb-4">
 				Welcome To <span className="welcome-text-color">Agile Mind</span>
 			</div>
-			<div className="place-self-center mb-4">
-				Let's create your first project!
-			</div>
-			<div className="place-self-center">
-				<Button
-					labelToShow="Create Project"
-					className="button-background-grad"
-					onClick={onClickCallBack}
-				/>
-			</div>
+			{isUserManager ? 
+				<>
+					<div className="place-self-center mb-4">
+						Let's create your first project!
+					</div>
+					<div className="place-self-center">
+						<Button
+							labelToShow="Create Project"
+							className="button-background-grad"
+							onClick={onClickCallBack}
+						/>
+					</div>
+				</>
+				:
+				<>
+					<div className="place-self-center mb-4">
+						No project assignment has been made yet, Please check with your Project Manager
+					</div>
+				</>
+			}
 		</div>
 	);
 });

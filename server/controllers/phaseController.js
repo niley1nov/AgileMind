@@ -2,7 +2,7 @@ import Project from "../models/Project.js";
 import Phase from "../models/Phase.js";
 import Epic from "../models/Epic.js";
 import mongoose from "mongoose";
-
+import { USER_ROLE } from "../utilities/constant.js";
 
 
 async function getPhaseList(req, res) {
@@ -41,6 +41,7 @@ async function getPhaseList(req, res) {
 		wrapper.projectName = project.projectName;
 		wrapper.projectStatus = project.status;
 		wrapper.phaseList = phaseList;
+		wrapper.isProjectManager = (req.user.role == USER_ROLE.MANAGER);
 		res.json(wrapper);
 	} catch (err) {
 		res.status(500).json({

@@ -13,7 +13,13 @@ const userSchema = new mongoose.Schema(
 			unique: true,
 		},
 		password: { type: String, required: "Password is a required field" },
-		role: { type: String, required: "Role is a required field" },
+		role: { type: String, 
+			enum: [
+				"Project Manager",
+				"Developer",
+				"Tester"
+			],
+			required: "Role is a required field" },
 	},
 	{
 		methods: {
