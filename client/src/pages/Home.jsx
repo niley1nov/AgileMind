@@ -104,7 +104,7 @@ export default function Home() {
 				</div>
 				<div className="pt-8">
 					{projectList.length == 0 ? (
-						<WelcomeMessage onClickCallBack={openCreateProjectModal} />
+						<WelcomeMessage onClickCallBack={openCreateProjectModal} isUserManager={isUserManager}/>
 					) : (
 						<Table header={heading} rowList={projectList} />
 					)}
