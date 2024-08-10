@@ -14,13 +14,23 @@ async function getProjectLevelQuestions(req, res) {
 				message: "Query Parameters are not correct",
 			});
 		} else {
-			const questionsList = await ProjectQuestion.find({
-				projectId: projectId,
-				type: questionsType,
-			})
-				.select("_id question seqNumber answer type answerGivenBy")
-				.sort({ seqNumber: 1 });
-			res.json(questionsList);
+			const projectRecord = await Project.findOne({_id: projectId});
+			const wrapper = {};
+			const isSubmitted = (questionsType == 'Functional' && projectRecord.isFunctionalInputProvided) || (questionsType == 'Technical' && projectRecord.isTechnicalInputProvided);
+			if(!isSubmitted){
+				const questionsList = await ProjectQuestion.find({
+					projectId: projectId,
+					type: questionsType,
+				})
+					.select("_id question seqNumber answer type answerGivenBy")
+					.sort({ seqNumber: 1 });
+				wrapper.questionsList = questionsList;
+			}else{
+				wrapper.questionsList = [];
+			}
+
+			wrapper.isSubmitted = isSubmitted;
+			res.json(wrapper);
 		}
 	} catch (err) {
 		res.status(500).json({
@@ -32,20 +42,29 @@ async function getProjectLevelQuestions(req, res) {
 
 async function getPhaseLevelQuestions(req, res) {
 	try {
-		const phaseId = req.query.phaseId;
-
+		const phaseId = req.query.phaseId;		
 		if (!phaseId) {
 			res.status(422).json({
 				status: "error",
 				message: "Query Parameters are not correct",
 			});
 		} else {
-			const questionsList = await ProjectQuestion.find({
-				phaseId: phaseId,
-			})
-				.select("_id question seqNumber answer type answerGivenBy subtype")
-				.sort({ seqNumber: 1 });
-			res.json(questionsList);
+			const phaseRecord = await Phase.findOne({_id: phaseId});
+			const wrapper = {};
+			const isSubmitted = phaseRecord.status === 'Input Provided';
+
+			if(!isSubmitted){
+				const questionsList = await ProjectQuestion.find({
+					phaseId: phaseId,
+				})
+					.select("_id question seqNumber answer type answerGivenBy subtype")
+					.sort({ seqNumber: 1 });
+					wrapper.questionsList = questionsList;
+			}else{
+				wrapper.questionsList = [];
+			}
+			wrapper.isSubmitted = isSubmitted;
+			res.json(wrapper);
 		}
 	} catch (err) {
 		res.status(500).json({
