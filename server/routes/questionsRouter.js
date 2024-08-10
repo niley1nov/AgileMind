@@ -12,8 +12,8 @@ import {ALL_ROLE} from '../utilities/constant.js';
 
 const router = express.Router();
 
-router.get("/getProjectLevelQuestions", authorizationMiddleware('Project',ALL_ROLE),  verifyUser, getProjectLevelQuestions);
-router.get("/getPhaseLevelQuestions", authorizationMiddleware('Phase',ALL_ROLE), verifyUser, getPhaseLevelQuestions);
+router.get("/getProjectLevelQuestions",verifyUser, authorizationMiddleware('Project',ALL_ROLE), getProjectLevelQuestions);
+router.get("/getPhaseLevelQuestions", verifyUser, authorizationMiddleware('Phase',ALL_ROLE), getPhaseLevelQuestions);
 
 router.post(
 	"/updateQuestionAnswers",
