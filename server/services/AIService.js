@@ -27,8 +27,27 @@ class AIService {
 		});
 		this.jsonChatSession = this.jsonifyModel.startChat({
 			generationConfig: getGenConfig(0.2, "application/json"),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
+		this.safetySettings = [
+			{
+				category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+				threshold: HarmBlockThreshold.BLOCK_NONE,
+			},
+			{
+				category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+				threshold: HarmBlockThreshold.BLOCK_NONE,
+			},
+			{
+				category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+				threshold: HarmBlockThreshold.BLOCK_NONE,
+			},
+			{
+				category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+				threshold: HarmBlockThreshold.BLOCK_NONE,
+			},
+		];
 	}
 
 	/**
@@ -45,6 +64,7 @@ class AIService {
 		});
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(1, "text/plain"),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 		const result = await chatSession.sendMessage(srs);
@@ -65,6 +85,7 @@ class AIService {
 		});
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.8, "text/plain", 16384),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -108,6 +129,7 @@ Input (A list of questions for project refinement):
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.4, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -146,6 +168,7 @@ Input (A list of questions for project refinement):
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.5, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -216,6 +239,7 @@ Feature -
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -274,6 +298,7 @@ Output JSON format -
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.8, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -324,6 +349,7 @@ Input (A list of questions for project phase refinement):
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -353,6 +379,7 @@ Input (A list of questions for project phase refinement):
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -429,6 +456,7 @@ Input (A list of questions for project phase refinement):
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: phaseRefinementHistory,
 		});
 
@@ -507,6 +535,7 @@ Output JSON format -
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -595,6 +624,7 @@ Output JSON format:
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.4, "application/json", 4096, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -641,6 +671,7 @@ Output JSON format:
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "application/json", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -650,16 +681,16 @@ Output JSON format:
 		const chatMessageToJsonify = `Convert below list of user stories into JSON structure.
 Output JSON format:
 [
-	{{
+	{
 		name: story name (String),
 		description: story description (string),
         tasks: story tasks as it is (string),
-		metadata: {{
+		metadata: {
 			story_points: A unit of measurement used to estimate the relative effort required to complete a piece of work. This can be a number from fibonacci series. Example- 1, 2, 3, 5, 8, 13 (Integer).
 			confidence: How confident are you about given story. output can be low, medium, high (Enum).
 			MoSCoW: Story Priority. Output can be Must Have, Should Have, Could Have, Won't Have (Enum).
-		}}
-	}}
+		}
+	}
 ]
 
 ` + newStoriesText.response.text();
@@ -691,6 +722,7 @@ Output JSON format:
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.2, "application/json", 16384, 0.95, 64),
+			safetySettings: this.safetySettings,
 			history: [],
 		});
 
