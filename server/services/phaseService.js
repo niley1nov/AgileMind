@@ -75,7 +75,7 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	const refinedEpic = await service.refineEpic(
 		phaseStructureJSON,
 		projectFunStructure,
-		phaseRelatedFunctionalDetails,
+		phaseRelatedFunctionalDetails[phaseSeqNum-1],
 		projectTechDiscussionDocument,
 		phaseDiscussionDoc
 	);
@@ -89,7 +89,7 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	);
 
 	const refiledStoryWithMetaDataList = await Promise.all(refinedStoryList.map(async function (epic) {
-		return await service.initStoryMetadata(epic, projectTechDiscussionDocument, phaseDiscussionDoc, phaseRelatedFunctionalDetails);
+		return await service.initStoryMetadata(epic, projectTechDiscussionDocument, phaseDiscussionDoc, phaseRelatedFunctionalDetails[phaseSeqNum-1]);
 	})
 	);
 

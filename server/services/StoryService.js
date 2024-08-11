@@ -7,6 +7,7 @@ import Story from "../models/Story.js";
 import Epic from "../models/Epic.js";
 import AIService from "./AIService.js";
 import mongoose from "mongoose";
+import Phase from "../models/Phase.js";
 
 async function reFectorStory(storyId, epicId) {
 	//Get all the list of stories under the epic
@@ -40,6 +41,8 @@ async function reFectorStory(storyId, epicId) {
 
 	const epic = epicList[0];
 
+	const phaseRecord = await Phase.findOne({_id: epic.phaseId });
+
 
 	const relatedStories = await Story.find({ epicId: epicId }).sort({
 		seqNumber: 1,
@@ -70,7 +73,7 @@ async function reFectorStory(storyId, epicId) {
 		epicData,
 		projectTechDiscussionDocument,
 		phaseDiscussionDocument,
-		phaseRelatedFunctionalDetails,
+		phaseRelatedFunctionalDetails[phaseRecord.seqNumber-1],
 		storyToRefector
 	);
 

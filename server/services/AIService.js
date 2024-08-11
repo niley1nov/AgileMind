@@ -459,11 +459,12 @@ Input (A list of questions for project phase refinement):
 			safetySettings: this.safetySettings,
 			history: phaseRefinementHistory,
 		});
-
+		let phaseStructureText = {};
+		let phaseStructureJSON = {};
 		try {
 			// Sends the current phase details and discussion to the model and awaits the refined structure.
-			const phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
-
+			phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
+			console.log('\n phaseStructureText '+JSON.stringify(phaseStructureText));
 			// Prepares the refined structure for conversion into JSON.
 			const chatMessageToJsonify = `Convert below software project phase structure document into JSON structure.
 Remove unnecessary prefix like Story 2.1, Epic 1, Task 3, Phase 1. Keep the actual name for items. Example: Phase 1: Project Setup and Core Backend Development -> Project Setup and Core Backend Development
@@ -486,7 +487,7 @@ Output JSON format -
 }
 
 ` + phaseStructureText.response.text();
-			const phaseStructureJSON = await this.jsonChatSession.sendMessage(
+			phaseStructureJSON = await this.jsonChatSession.sendMessage(
 				chatMessageToJsonify
 			);
 			console.log('>>>> AISERVICE phaseStructureText ' + phaseStructureText.response.text());
@@ -497,7 +498,7 @@ Output JSON format -
 			};
 		} catch (ex) {
 			// Handle exceptions by logging errors and returning an empty object if the process fails.
-			console.log(ex);
+			console.log('\n Exception '+JSON.stringify(ex));
 			console.log(phaseStructureText.response.text());
 			console.log(phaseStructureJSON.response.text());
 			return {};
@@ -529,7 +530,7 @@ Output JSON format -
 				phaseRelatedFunctionalDetails,
 				projectTechDiscussionDocument,
 				phaseDiscussionDocument,
-				phase["notes"].join("\n")
+				phase["notes"] ? phase["notes"].join("\n") : ''
 			]),
 		});
 
@@ -671,7 +672,6 @@ Output JSON format:
 
 		let chatSession = model.startChat({
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
-			safetySettings: this.safetySettings,
 			history: [],
 		});
 
@@ -716,7 +716,7 @@ Output JSON format:
 			systemInstruction: getPrompts("calculate_dependencies", [
 				epic["name"],
 				JSON.stringify(epic["stories"]),
-				epic["notes"].join("\n")
+				epic["notes"] ? epic["notes"].join("\n") : ''
 			]),
 		});
 
