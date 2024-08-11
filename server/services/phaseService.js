@@ -71,6 +71,14 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 		phaseRefinementHistory
 	);
 
+
+	console.log('>>> refinedEpic phaseStructureJSON: ' + JSON.stringify(phaseStructureJSON));
+	console.log('>>> refinedEpic projectFunStructure: ' + JSON.stringify(projectFunStructure));
+	console.log('>>> refinedEpic phaseRelatedFunctionalDetails: ' + phaseRelatedFunctionalDetails[phaseSeqNum-1]);
+	console.log('>>> refinedEpic projectTechDiscussionDocument: ' + projectTechDiscussionDocument);
+	console.log('>>> refinedEpic phaseDiscussionDoc: ' + phaseDiscussionDoc);
+
+
 	//Refine each epic present in the phase
 	const refinedEpic = await service.refineEpic(
 		phaseStructureJSON,

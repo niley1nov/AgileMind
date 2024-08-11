@@ -20,7 +20,6 @@ export default function EpicPage() {
 		{ key: "status", label: "Story Status" },
 		{ key: "devOwner", label: "Dev Owner" },
 		{ key: "qaOwner", label: "QA Owner" }
-
 	];
 
 	const { id } = useParams();

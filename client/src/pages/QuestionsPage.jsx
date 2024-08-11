@@ -43,6 +43,7 @@ export default function QuestionsPage() {
 						},
 					}
 				);
+				getDummyAnswers();
 			} else {
 				response = await apiClientForAuthReq.get(
 					"/questions/getPhaseLevelQuestions",
@@ -53,6 +54,7 @@ export default function QuestionsPage() {
 						},
 					}
 				);
+				getDummyAnswers();
 			}
 			if (response.status == "200") {
 				setQuestionList(response.data.questionsList);
@@ -66,6 +68,38 @@ export default function QuestionsPage() {
 			navigate('/login');
 		} finally {
 			setShowSpinner(false);
+		}
+	}
+
+	async function getDummyAnswers() {
+		try {
+			let response = {};
+			if (type == QUESTION_FUNCTIONAL || type == QUESTION_TECHNICAL) {
+				response = await apiClientForAuthReq.get(
+					"/answers/getProjectLevelAnswers",
+					{
+						params: { projectId: id, type: type },
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					}
+				);
+			} else {
+				response = await apiClientForAuthReq.get(
+					"/answers/getPhaseLevelAnswers",
+					{
+						//wrong id here
+						params: { phaseId: id },
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					}
+				);
+			}
+			console.log('Answers - ');
+			console.log(response);
+		} catch (ex) {
+			console.log(ex);
 		}
 	}
 

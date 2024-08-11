@@ -9,7 +9,6 @@ import PopupMessage from "../components/PopupMessage";
 import Spinner from "../components/Spinner";
 
 export default function LoginPage() {
-
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const [popupMessage, setPopupMessage] = useState("");
 	const [showSpinner, setShowSpinner] = useState(false);

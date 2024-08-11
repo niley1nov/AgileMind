@@ -10,8 +10,8 @@ const TextNode = memo(function TextNode({ sourcePosition, targetPosition, data }
 				className={`wrapper gradient ${data.highlighted ? "highlighted" : "normal"
 					}`}
 			>
-				<div className="inner">
-					<label>{data.label}</label>
+				<div className="inner truncate text-balance">
+					<label className="">{data.label}</label>
 					<input
 						type="number"
 						value={data.points}
@@ -20,6 +20,7 @@ const TextNode = memo(function TextNode({ sourcePosition, targetPosition, data }
 						disabled={true}
 					/>
 				</div>
+				
 			</div>
 			{sourcePosition === "right" ? (
 				<Handle type="source" position={Position.Right} />
