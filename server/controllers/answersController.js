@@ -1,8 +1,11 @@
 import ProjectQuestion from "../models/ProjectQuestion.js";
 import { getProjectDocumentContent } from "../utilities/documentUtil.js";
-import { DOCUMENT_TYPE } from "../utilities/constant.js";
+import { DOCUMENT_TYPE,QUESTION_TYPE } from "../utilities/constant.js";
 import answerService from "../helper/answerService.js";
 import Phase from "../models/Phase.js";
+import ProjectFile from "../models/ProjectFile.js";
+import techService from "../helper/techService.js";
+import businessService from "../helper/businessService.js";
 
 async function getProjectLevelAnswers(req, res) {
 	try {
@@ -15,15 +18,23 @@ async function getProjectLevelAnswers(req, res) {
 				message: "Query Parameters are not correct",
 			});
 		} else {
+			const srsFile = await ProjectFile.findOne({projectId: projectId});
+			const srs = srsFile.data.toString('utf-8');
 			const questionsList = await ProjectQuestion.find({
 				projectId: projectId,
 				type: questionsType,
 			})
 				.select("_id question seqNumber answer type answerGivenBy")
 				.sort({ seqNumber: 1 });
-			res.json(questionsList);
+			const service = questionsType == QUESTION_TYPE.FUNCTIONAL ? new businessService(srs) : new techService(srs);
+			const answerList = await Promise.all(questionsList.map(async function(q){
+				const answer = await service.chat(q.question);
+				return answer;
+			}));
+			res.json(answerList);
 		}
 	} catch (err) {
+		console.log('>>> '+err.message);
 		res.status(500).json({
 			status: "error",
 			message: "Internal Server Error " + err.message,
