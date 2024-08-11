@@ -670,7 +670,7 @@ Output JSON format:
 		});
 
 		let chatSession = model.startChat({
-			generationConfig: getGenConfig(0.3, "application/json", 16384, 0.95, 64),
+			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
 			safetySettings: this.safetySettings,
 			history: [],
 		});
