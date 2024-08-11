@@ -1,4 +1,4 @@
-Here’s a clear and organized version of the instructions:
+Here’s the updated version with the additional details:
 
 ---
 
@@ -19,7 +19,7 @@ Here’s a clear and organized version of the instructions:
    - Create a `.env` file in the `server` folder by copying the contents of the `.env.example` file.
    - Update the following environment variables in the `.env` file:
      - `MONGODB_URI`
-     - `JWT_SECRET_TOKEN`
+     - `JWT_SECRET_TOKEN` (You can use this sample token if you don't want to generate a new one: `9772fc935a8cbea24b63ecb0767dd1a06dc2bc6a`)
      - `GEMINI_API_TOKEN`
    - Start the server by running:
      ```bash
@@ -33,7 +33,11 @@ Here’s a clear and organized version of the instructions:
      npm install
      ```
    - Create a `.env` file in the `client` folder by copying the contents of the `.env.example` file.
-   - Update the `VITE_APP_API_URL` variable in the `.env` file with the base URL of your server.
+   - Update the `VITE_APP_API_URL` variable in the `.env` file with:
+     ```bash
+     VITE_APP_API_URL=http://localhost:3000/api
+     ```
+     - (Ensure to check the port number if it differs in your case.)
 
 5. **Run the React Application:**
    - Start the React application by running:
