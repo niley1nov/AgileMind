@@ -110,7 +110,7 @@ function CreateProjectModal({ showModal, onClose, onProjectCreation }) {
 									labelToShow="SRS File"
 									elementName="srsFile"
 									placeholder="Upload your SRS file here"
-									accept=".pdf,.doc,.docx,.txt"
+									accept=".txt"
 									register={register("srsFile", { required: "Required field" })}
 									errorToShow={errors.srsFile?.message}
 								/>
