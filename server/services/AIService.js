@@ -464,7 +464,6 @@ Input (A list of questions for project phase refinement):
 		try {
 			// Sends the current phase details and discussion to the model and awaits the refined structure.
 			phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
-			console.log('\n phaseStructureText '+JSON.stringify(phaseStructureText));
 			// Prepares the refined structure for conversion into JSON.
 			const chatMessageToJsonify = `Convert below software project phase structure document into JSON structure.
 Remove unnecessary prefix like Story 2.1, Epic 1, Task 3, Phase 1. Keep the actual name for items. Example: Phase 1: Project Setup and Core Backend Development -> Project Setup and Core Backend Development
@@ -490,8 +489,6 @@ Output JSON format -
 			phaseStructureJSON = await this.jsonChatSession.sendMessage(
 				chatMessageToJsonify
 			);
-			console.log('>>>> AISERVICE phaseStructureText ' + phaseStructureText.response.text());
-			console.log('>>>> AISERVICE phaseStructureJSON ' + phaseStructureJSON.response.text());
 			return {
 				phaseStructureText: phaseStructureText.response.text(),
 				phaseStructureJSON: JSON.parse(phaseStructureJSON.response.text())
@@ -499,8 +496,6 @@ Output JSON format -
 		} catch (ex) {
 			// Handle exceptions by logging errors and returning an empty object if the process fails.
 			console.log('\n Exception '+JSON.stringify(ex));
-			console.log(phaseStructureText.response.text());
-			console.log(phaseStructureJSON.response.text());
 			return {};
 		}
 	}
@@ -554,10 +549,8 @@ Output JSON format -
 			const epicStructureText = await chatSession.sendMessage(JSON.stringify(epic), { timeout: 1500 });
 			epicData["data"] = epicStructureText.response.text();
 			phaseData["epics"].push(epicData);
-			console.log("Completed epic", i);
 			i++;
 		}
-		console.log("Completed phase");
 		return phaseData;
 	}
 
@@ -593,7 +586,6 @@ Output JSON format:
 		epic["stories"] = epicStructureJSON["stories"];
 		epic["notes"] = epicStructureJSON["notes"];
 		epic["dependencies"] = epicStructureJSON["dependencies"];
-		console.log('>>>> EPIC FROM AI CLASS ' + epic);
 		return epic;
 	}
 

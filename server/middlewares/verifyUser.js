@@ -46,7 +46,6 @@ const authorizationMiddleware = function (objectType, allowRoles){
 			const projectId = await getProjectId(objectType, recordId);
 			const userId = req.user._id;
 			if(projectId){
-				console.log('>>PROJECT ID '+projectId);
 				const projectAssignment = await ProjectAssignment.findOne({userId:userId, projectId: projectId});
 				if(!projectAssignment || !allowRoles.includes(req.user.role)){
 					return res.status(403).json({ message: "Access denied. You are not assigned to this object." });

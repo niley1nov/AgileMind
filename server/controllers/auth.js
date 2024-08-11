@@ -1,6 +1,17 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
+/**
+ * The function `RegisterUser` checks if a user already exists in the database and either registers a
+ * new user or returns an error message.
+ * @param req - The `req` parameter in the `RegisterUser` function typically represents the HTTP
+ * request object, which contains information about the incoming request from the client, such as the
+ * request headers, parameters, body, and more. In this specific context, `req.body` is used to access
+ * the body of the
+ * @param res - The `res` parameter in the `RegisterUser` function is the response object that will be
+ * used to send the response back to the client making the request. It is typically used to set the
+ * status code, headers, and send data back to the client in the form of JSON, HTML, or
+ */
 async function RegisterUser(req, res) {
 	const userDetail = req.body;
 	try {
@@ -34,6 +45,18 @@ async function RegisterUser(req, res) {
 	}
 }
 
+
+/**
+ * The function `loginUser` handles user login by checking user credentials and generating a JWT token
+ * upon successful login.
+ * @param req - The `req` parameter in the `loginUser` function stands for the request object, which
+ * contains information about the HTTP request that triggered the function. This object typically
+ * includes details such as the request headers, parameters, body, and other relevant information sent
+ * by the client to the server. In this case
+ * @param res - The `res` parameter in the `loginUser` function is the response object that will be
+ * used to send the response back to the client making the request. It is typically used to set the
+ * status code, headers, and send data back to the client in the form of JSON, HTML, or
+ */
 async function loginUser(req, res) {
 	const userDetail = req.body;
 	try {

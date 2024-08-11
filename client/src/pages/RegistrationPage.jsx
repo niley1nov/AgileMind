@@ -36,7 +36,6 @@ export default function RegistrationPage() {
 			setShowSpinner(true);
 			const response = await apiClientForUnAuthReq.post("/auth/register", data);
 			if (response.status == "200") {
-				console.log(JSON.stringify(response));
 				navigate('/login');
 			}
 		} catch (e) {
