@@ -7,6 +7,7 @@ import { DOCUMENT_TYPE } from "../utilities/constant.js";
 import Epic from "../models/Epic.js";
 import Story from "../models/Story.js";
 import Phase from "../models/Phase.js";
+import mongoose from "mongoose";
 
 async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	const currPhaseChat = await getPhaseChat(phaseId);
@@ -155,7 +156,7 @@ async function getPhaseRefinementHistory(
 									{
 										$eq: ["$projectId", "$$projectId"],
 									},
-									{ $lt: ["$seqNumber", phaseSeqNum] }, // replace specificNumber with the number you want
+									{ $lt: ["$seqNumber", phaseSeqNum.toString()] }, // replace specificNumber with the number you want
 								],
 							},
 						},
@@ -208,13 +209,15 @@ async function getPhaseRefinementHistory(
 		},
 	]);
 
-	const phases = [];
 	const phaseDiscussionDocuments = [];
 	const phaseStructureTexts = [];
+	const phases = [];
 
-	for (let i = 0; i < phaseList.phases.length; i++) {
-		phases = projectTechStructure[i];
-		for (let doc of phaseList.phases[i]) {
+	console.log('QUERY RESULT '+JSON.stringify(phaseList));
+
+	for (let i = 0; i < phaseSeqNum-1; i++) {
+		phases.push(projectTechStructure[phaseSeqNum-1]);
+		for (let doc of phaseList[0].phases[i].documents) {
 			if (doc.docType === DOCUMENT_TYPE.PHASE_DISCUSSION_DOC) {
 				phaseDiscussionDocuments.push(doc.content);
 			} else if (doc.docType === DOCUMENT_TYPE.PHASE_STRUCT_TEXT) {
@@ -226,7 +229,7 @@ async function getPhaseRefinementHistory(
 	console.log('>>> phaseDiscussionDocuments ' + JSON.stringify(phaseDiscussionDocuments));
 	console.log('>>> phaseDiscussionDocuments ' + JSON.stringify(phaseDiscussionDocuments));
 
-	return service.preparePhaseRefinementHistory(
+	return await service.preparePhaseRefinementHistory(
 		phases,
 		phaseDiscussionDocuments,
 		phaseStructureTexts
