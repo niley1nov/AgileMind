@@ -94,6 +94,17 @@ const DependencyGraphPage = () => {
 		return matrix;
 	}
 
+	function truncateString(str, maxLength) {
+		if (!str) {
+			return "";
+		}
+		if (str.length <= maxLength) {
+			return str;
+		} else {
+			return str.substring(0, maxLength) + "...";
+		}
+	}
+
 	useEffect(() => {
 		getEpicRelatedData();
 		const roots = [];
@@ -166,7 +177,7 @@ const DependencyGraphPage = () => {
 			const node = {
 				id: String(i),
 				type: "textinput",
-				data: { label: story, points: modelOutput[story].points },
+				data: { label: truncateString(story, 20), points: modelOutput[story].points },
 				position: { x: 100 * xTopology[story], y: 160 * yTopology[story] },
 			};
 			if (source !== "") {
