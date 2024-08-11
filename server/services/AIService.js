@@ -431,10 +431,11 @@ Input (A list of questions for project phase refinement):
 			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
 			history: phaseRefinementHistory,
 		});
-
+		let phaseStructureText = {};
+		let phaseStructureJSON = {};
 		try {
 			// Sends the current phase details and discussion to the model and awaits the refined structure.
-			const phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
+			phaseStructureText = await chatSession.sendMessage(JSON.stringify(phase) + "\n\n" + phaseDiscussionDocument);
 			console.log('\n phaseStructureText '+JSON.stringify(phaseStructureText));
 			// Prepares the refined structure for conversion into JSON.
 			const chatMessageToJsonify = `Convert below software project phase structure document into JSON structure.
@@ -458,7 +459,7 @@ Output JSON format -
 }
 
 ` + phaseStructureText.response.text();
-			const phaseStructureJSON = await this.jsonChatSession.sendMessage(
+			phaseStructureJSON = await this.jsonChatSession.sendMessage(
 				chatMessageToJsonify
 			);
 			console.log('>>>> AISERVICE phaseStructureText ' + phaseStructureText.response.text());
@@ -501,7 +502,7 @@ Output JSON format -
 				phaseRelatedFunctionalDetails,
 				projectTechDiscussionDocument,
 				phaseDiscussionDocument,
-				phase["notes"].join("\n")
+				phase["notes"] ? phase["notes"].join("\n") : ''
 			]),
 		});
 
@@ -640,7 +641,7 @@ Output JSON format:
 		});
 
 		let chatSession = model.startChat({
-			generationConfig: getGenConfig(0.3, "application/json", 16384, 0.95, 64),
+			generationConfig: getGenConfig(0.3, "text/plain", 16384, 0.95, 64),
 			history: [],
 		});
 
@@ -685,7 +686,7 @@ Output JSON format:
 			systemInstruction: getPrompts("calculate_dependencies", [
 				epic["name"],
 				JSON.stringify(epic["stories"]),
-				epic["notes"].join("\n")
+				epic["notes"] ? epic["notes"].join("\n") : ''
 			]),
 		});
 
