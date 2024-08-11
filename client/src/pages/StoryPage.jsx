@@ -89,7 +89,7 @@ export default function StoryPage() {
 					<ActionBar textToShow={`Story: ${storyDetails.storyName}`}>
 						{showRefectorButton ?
 							<Button
-								labelToShow="Refector Story"
+								labelToShow="Refactor Story"
 								className="button-background-grad"
 								onClick={refectorStory} />
 							:

@@ -70,13 +70,13 @@ export default function RefectorStoryConfModal({ showModal, onClose }) {
 						</svg>
 					</button>
 					<div className="mt-3 sm:mt-5">
-						Please review Remarks and update it as per your refectoring expectations. Once you are confirmed click on Refector button.
+						Please review Remarks and update it as per your refactoring expectations. Once you are confirmed click on Refactor button.
 					</div>
 				</div>
 				<div className="relative bg-neutral-800 border-t border-gray-600 mt-4">
 					<center>
 						<button className="mt-4 mb-2 button-background-grad text-white py-2 px-6 text-sm rounded-full transition duration-200" onClick={requestRefectorStory}>
-							Refector
+							Refactor
 						</button>
 					</center>
 				</div>
