@@ -142,7 +142,7 @@ About AgileMind:
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
 
 You will receive a JIRA epic structure. You need to refine the Stories.
-Add tasks and detailed description for stories. You can break down and reorganize stories if neccessary.
+Add TASKS and detailed DESCRIPTION for stories. You can break down and reorganize stories if neccessary.
 Given epics belong to a single phase. Refer Phase Discussion Document for details.
 Below are some project details and team discussion documents for context.
 Output should be in plain text. Don't use JSON format.
@@ -212,8 +212,8 @@ About AgileMind:
 AgileMind is an innovative project management tool designed to accelerate and optimize the software development lifecycle. It leverages the power of Large Language Models (LLMs) to analyze Software Requirements Specifications (SRS) documents, extracting critical insights and generating targeted questions for stakeholders (product managers, business analysts, developers, and designers). By automating the analysis of SRS documents and guiding the creation of a detailed project plan, AgileMind ensures that all stakeholders are aligned, informed, and working towards a shared vision.
 
 You will receive User Story Data with Metadata as Input.
-You have to analyse the metadata. Story Remarks will also tell about the changes needed in refactorization.
-If story points are 8 or more, Break it down into mutiple smaller stories.
+You have to analyze the metadata. Story Remarks will also tell about the changes needed in refactorization.
+If story points are 8 or more, Break it down into multiple smaller stories.
 If confidence is low, break it down into analysis / POCs and implementation stories.
 Provide detailed description and tasks to generated stories.
 
@@ -264,7 +264,7 @@ Output JSON format:
 	}
 ]
 
-Below is the epic strucure,
+Below is the epic structure,
 
 ${replacableText[1]}
 
