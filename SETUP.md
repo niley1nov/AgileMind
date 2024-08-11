@@ -18,7 +18,7 @@ Here’s the updated version with the additional details:
      ```
    - Create a `.env` file in the `server` folder by copying the contents of the `.env.example` file.
    - Update the following environment variables in the `.env` file:
-     - `MONGODB_URI`
+     - `MONGODB_URI` (We have given this URI in the "Testing instructions" of submitted form)
      - `JWT_SECRET_TOKEN` (You can use this sample token if you don't want to generate a new one: `9772fc935a8cbea24b63ecb0767dd1a06dc2bc6a`)
      - `GEMINI_API_TOKEN`
    - Start the server by running:
@@ -45,6 +45,9 @@ Here’s the updated version with the additional details:
      npm run dev
      ```
 
+6. **Open the React Application:**
+ - Open the react application in the browser, you will get the URL from above command
+    
 ---
 
 These steps will guide you through setting up and testing the application on your local machine.
