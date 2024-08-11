@@ -11,6 +11,20 @@ import Document from "../models/Document.js";
 import Phase from "../models/Phase.js";
 import { DOCUMENT_TYPE } from "../utilities/constant.js";
 
+/**
+ * This function updates the project summary and project questions for a given project based on the
+ * provided SRS text.
+ * @param projectId - The `projectId` parameter is the unique identifier of the project for which you
+ * want to update the project summary and project questions. It is used to identify the specific
+ * project in the database and make the necessary updates based on the provided information.
+ * @param srsText - The `srsText` parameter in the `updateProjectSummaryAndProjectQuestions` function
+ * represents the software requirements specification text that will be used to generate the project
+ * summary and project questions for a specific project identified by the `projectId`. This text
+ * contains detailed information about the requirements and specifications of the software project
+ * @returns The `updateProjectSummaryAndProjectQuestions` function is an asynchronous function that
+ * updates the project summary and project questions based on the provided `projectId` and `srsText`.
+ * Here is a summary of what is being returned:
+ */
 async function updateProjectSummaryAndProjectQuestions(projectId, srsText) {
 	const service = new AIService();
 	const projectSummary = await service.getProjectSummary(srsText);
@@ -54,6 +68,16 @@ async function updateProjectSummaryAndProjectQuestions(projectId, srsText) {
 	);
 }
 
+/**
+ * The function `createProjectDocuments` generates various project documents based on project data and
+ * saves them in the database.
+ * @param projectId - The `projectId` parameter is used to identify the specific project for which the
+ * documents are being created. It serves as a unique identifier for the project within the system.
+ * @param projSummary - The `projSummary` parameter in the `createProjectDocuments` function likely
+ * contains a summary or key information about the project. This information is used to initialize an
+ * `AIService` object and is passed to various methods within the function for document generation and
+ * processing related to the project.
+ */
 async function createProjectDocuments(projectId, projSummary) {
 	const functionalChat = await getFunctionalChat(projectId);
 	const technicalChat = await getTechnicalChat(projectId);
@@ -67,7 +91,6 @@ async function createProjectDocuments(projectId, projSummary) {
 		JSON.stringify(functionalChat),
 		JSON.stringify(technicalChat)
 	);
-	console.log(">>> projectDoc " + JSON.stringify(projectDocument));
 
 	//Get Functional Structure and Functional Structure Details
 	const { projectFunStructure, projectFunStructureDetailed } =
@@ -134,12 +157,10 @@ async function createProjectDocuments(projectId, projSummary) {
 
 	//Save all document in the database
 	await Document.insertMany(documentList);
-	console.log(">>>>Document Inserted");
 	const insertedPhaseList = await createPhaseRecords(
 		projectId,
 		projectTechnicalStructure
 	);
-	console.log(">>>>Phase Inserted");
 	const phaseLevelQuestionList = await service.getPhaseLevelQuestions(
 		projectFunStructureDetailed,
 		projectTechnicalStructure
@@ -147,6 +168,18 @@ async function createProjectDocuments(projectId, projSummary) {
 	await createPhaseLevelQuestions(insertedPhaseList, phaseLevelQuestionList);
 }
 
+
+/**
+ * The function `createPhaseRecords` creates phase records for a project and updates the project status
+ * to "In Progress".
+ * @param projectId - The `projectId` parameter is the unique identifier of the project for which you
+ * want to create phase records.
+ * @param technicalStructure - The `technicalStructure` parameter is an array of objects that contains
+ * information about different phases of a project. Each object in the array has a `phase` property
+ * that represents the name of the phase.
+ * @returns The function `createPhaseRecords` returns the list of inserted phase records after
+ * inserting them into the database.
+ */
 async function createPhaseRecords(projectId, technicalStructure) {
 	const phaseList = technicalStructure.map(function (record, index) {
 		return {

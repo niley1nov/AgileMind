@@ -9,6 +9,27 @@ import Story from "../models/Story.js";
 import Phase from "../models/Phase.js";
 import mongoose from "mongoose";
 
+
+
+/**
+ * The function `createPhaseStructure` processes various project and phase-related data to create and
+ * refine phase structures, discussions, epics, stories, and documents.
+ * @param phaseId - The `phaseId` parameter in the `createPhaseStructure` function represents the
+ * unique identifier of the phase for which you are creating the phase structure. It is used to
+ * identify and update the specific phase in the database.
+ * @param projectId - projectId is the unique identifier of the project for which the phase structure
+ * is being created. It is used to retrieve project-related information and documents needed for
+ * creating the phase structure.
+ * @param phaseSeqNum - The `phaseSeqNum` parameter in the `createPhaseStructure` function represents
+ * the sequence number of the phase within the project. It is used to identify the specific phase
+ * within the project's phases. For example, if a project has multiple phases like Phase 1, Phase 2,
+ * Phase
+ * @returns The `createPhaseStructure` function does not explicitly return anything as it is an
+ * asynchronous function that performs various operations like creating phase discussion documents,
+ * refining phase details, refining epics, creating stories under the phase, inserting documents in the
+ * backend, and updating the phase status to "In Progress". The function performs these tasks based on
+ * the input parameters `phaseId`, `projectId`, and `phaseSeqNum
+ */
 async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	const currPhaseChat = await getPhaseChat(phaseId);
 	const project = await Project.findOne({ _id: projectId });
@@ -60,8 +81,6 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 		projectTechStructure
 	);
 
-	console.log('>>> phaseRefinementHistory ' + JSON.stringify(phaseRefinementHistory));
-
 	//Refine the Phase details
 	const { phaseStructureText, phaseStructureJSON } = await service.refinePhase(
 		projectFunStructureDetailed,
@@ -80,8 +99,6 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 		phaseDiscussionDoc
 	);
 
-	console.log('>>> refinedEpic ' + JSON.stringify(refinedEpic));
-
 	//Get the final list of stories
 	const refinedStoryList = await Promise.all(refinedEpic.epics.map(async function (epic) {
 		return await service.storyJsonify(epic);
@@ -93,11 +110,8 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	})
 	);
 
-	console.log('>>> refinedStoryList ' + JSON.stringify(refiledStoryWithMetaDataList));
 
 	await createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaDataList);
-
-	console.log('>>> Created All the data ');
 
 	const documentList = [
 		{
@@ -128,6 +142,28 @@ async function createPhaseStructure(phaseId, projectId, phaseSeqNum) {
 	);
 }
 
+
+
+/**
+ * The function `getPhaseRefinementHistory` retrieves phase refinement history data based on project
+ * ID, phase sequence number, and project technical structure.
+ * @param service - The `service` parameter in the `getPhaseRefinementHistory` function is likely a
+ * service object or class instance that contains methods for preparing phase refinement history data.
+ * It is used to call the `preparePhaseRefinementHistory` method to process and return the phase
+ * refinement history based on the provided parameters
+ * @param projectId - The `projectId` parameter is the unique identifier of the project for which you
+ * want to retrieve the phase refinement history. It is used to query the database and fetch relevant
+ * information about the project phases and associated documents.
+ * @param phaseSeqNum - The `phaseSeqNum` parameter represents the sequence number of the phase for
+ * which you want to retrieve refinement history. The function retrieves historical data related to
+ * phases that occurred before the specified phase sequence number in a project.
+ * @param projectTechStructure - The `projectTechStructure` parameter seems to represent the technical
+ * structure of a project. It is used in the `getPhaseRefinementHistory` function to retrieve phase
+ * refinement history based on the provided parameters.
+ * @returns The function `getPhaseRefinementHistory` returns the result of calling
+ * `service.preparePhaseRefinementHistory` with the `phases`, `phaseDiscussionDocuments`, and
+ * `phaseStructureTexts` as arguments.
+ */
 async function getPhaseRefinementHistory(
 	service,
 	projectId,
@@ -213,8 +249,6 @@ async function getPhaseRefinementHistory(
 	const phaseStructureTexts = [];
 	const phases = [];
 
-	console.log('QUERY RESULT '+JSON.stringify(phaseList));
-
 	for (let i = 0; i < phaseSeqNum-1; i++) {
 		phases.push(projectTechStructure[phaseSeqNum-1]);
 		for (let doc of phaseList[0].phases[i].documents) {
@@ -226,15 +260,32 @@ async function getPhaseRefinementHistory(
 		}
 	}
 
-	console.log('>>> phaseDiscussionDocuments ' + JSON.stringify(phaseDiscussionDocuments));
-	console.log('>>> phaseDiscussionDocuments ' + JSON.stringify(phaseDiscussionDocuments));
-
 	return await service.preparePhaseRefinementHistory(
 		phases,
 		phaseDiscussionDocuments,
 		phaseStructureTexts
 	);
 }
+
+
+/**
+ * The function `createEpicStoryUnderPhase` creates epic stories under a specific phase by inserting
+ * epics and their associated stories into the database.
+ * @param service - The `service` parameter in the `createEpicStoryUnderPhase` function is typically an
+ * object that contains various methods or functions related to handling business logic or data
+ * operations. It is used to interact with external services, databases, or perform calculations
+ * required for creating epic stories under a specific phase.
+ * @param phaseId - The `phaseId` parameter in the `createEpicStoryUnderPhase` function represents the
+ * identifier of the phase under which the epic stories will be created. It is used to associate the
+ * newly created epics and stories with a specific phase in the system.
+ * @param refiledStoryWithMetaDataList - The `refiledStoryWithMetaDataList` parameter is an array
+ * containing objects that represent epics. Each epic object contains the following properties:
+ * @returns The `createEpicStoryUnderPhase` function is returning a Promise. This function first
+ * creates a list of epics based on the `refiledStoryWithMetaDataList`, calculates dependencies for
+ * each epic, inserts the epics into the database, and then creates a list of stories for each epic and
+ * inserts them into the database as well. The function uses asynchronous operations with `await` and
+ * `Promise
+ */
 
 async function createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaDataList) {
 	let storyList = [];
@@ -254,7 +305,6 @@ async function createEpicStoryUnderPhase(service, phaseId, refiledStoryWithMetaD
 		}
 		));
 
-	console.log('>>>EPIC TO INSERT ' + JSON.stringify(epicList));
 	const insertedEpics = await Epic.insertMany(epicList);
 
 	//Create story list to insert

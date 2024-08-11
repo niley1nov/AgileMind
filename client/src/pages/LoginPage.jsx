@@ -20,7 +20,6 @@ export default function LoginPage() {
 			setShowSpinner(true);
 			const response = await apiClientForUnAuthReq.post("/auth/login", data);
 			if (response.status == "200") {
-				console.log(JSON.stringify(response));
 				localStorage.setItem("token", response.data.token);
 				navigate('/');
 			}

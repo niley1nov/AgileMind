@@ -29,20 +29,17 @@ let oldDocumentCache = {};
 projectSchema.pre("findOneAndUpdate", async function (next) {
 	const oldDoc = await this.model.findOne(this.getQuery());
 	oldDocumentCache[this.getFilter()._id] = oldDoc;
-	console.log('>>> In PRE UPDATE PROJECT');
 	next();
 });
 
 //Post hook for update operation
 projectSchema.post("findOneAndUpdate", function (doc) {
 	const oldDoc = oldDocumentCache[doc._id];
-	console.log('>>> In POST UPDATE PROJECT');
 	if (
 		doc.status == 'Input Provided' &&
 		oldDoc.status !== 'Input Provided'
 
 	) {
-		console.log('>>> POST IF');
 		createProjectDocuments(doc._id, doc.projectSummary);
 	}
 });

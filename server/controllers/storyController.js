@@ -2,6 +2,18 @@ import mongoose from "mongoose";
 import Story from "../models/Story.js";
 import User from "../models/User.js";
 
+/**
+ * The function `getStoryDetails` retrieves details of a story including epic, owners, status, and
+ * other information and returns them in a JSON response.
+ * @param req - req is the request object that contains information about the HTTP request made to the
+ * server. It includes details such as query parameters, body content, headers, and more. In the
+ * provided code snippet, req.query.storyId is used to extract the storyId parameter from the query
+ * string of the request URL.
+ * @param res - The `res` parameter in the `getStoryDetails` function is the response object that will
+ * be used to send the response back to the client making the request. In this case, the response will
+ * be in JSON format containing the details of a specific story along with additional information like
+ * the epic name,
+ */
 async function getStoryDetails(req, res) {
 	try {
 		const storyId = req.query.storyId;
@@ -75,7 +87,6 @@ async function getStoryDetails(req, res) {
 		wrapper.storyInputDetails = storyInputDetails;
 		res.json(wrapper);
 	} catch (err) {
-		console.log("Internal Server Error " + err.message);
 		res.status(500).json({
 			status: "error",
 			message: "Internal Server Error " + err.message,
@@ -83,6 +94,18 @@ async function getStoryDetails(req, res) {
 	}
 }
 
+/**
+ * The function `updateStoryDetails` updates the details of a story in a database based on the provided
+ * request body and returns the updated story.
+ * @param req - The `req` parameter in the `updateStoryDetails` function typically represents the HTTP
+ * request object, which contains information about the incoming request from the client, such as the
+ * request headers, parameters, body, and more. In this specific function, `req` is used to access the
+ * request body (`
+ * @param res - The `res` parameter in the `updateStoryDetails` function is the response object that
+ * will be used to send a response back to the client making the request. It is typically used to send
+ * HTTP responses with status codes, headers, and data back to the client. In the provided code
+ * snippet,
+ */
 async function updateStoryDetails(req, res) {
 	try {
 		const storyDetails = req.body;
@@ -106,7 +129,6 @@ async function updateStoryDetails(req, res) {
 			updatedStory: updatedStory,
 		});
 	} catch (err) {
-		console.log("Internal Server Error " + err.message);
 		res.status(500).json({
 			status: "error",
 			message: "Internal Server Error " + err.message,
@@ -114,6 +136,17 @@ async function updateStoryDetails(req, res) {
 	}
 }
 
+/**
+ * The function `requestForStoryRefectoring` updates a story in a database to mark refactoring as
+ * requested and returns the updated story details in a JSON response.
+ * @param req - The `req` parameter in the `requestForStoryRefactoring` function is typically the
+ * request object representing the HTTP request made to the server. It contains information about the
+ * request such as the request headers, body, parameters, and other details sent by the client. In this
+ * specific function, `req
+ * @param res - The `res` parameter in the `requestForStoryRefectoring` function is the response object
+ * that will be sent back to the client making the request. It is used to send the HTTP response with
+ * the status code and data.
+ */
 async function requestForStoryRefectoring(req, res) {
 	try {
 		const storyDetail = req.body;
@@ -129,7 +162,6 @@ async function requestForStoryRefectoring(req, res) {
 		});
 
 	} catch (err) {
-		console.log("Internal Server Error " + err.message);
 		res.status(500).json({
 			status: "error",
 			message: "Internal Server Error " + err.message,

@@ -46,9 +46,7 @@ function CreateProjectModal({ showModal, onClose, onProjectCreation }) {
 			if (response.status == "200") {
 				onProjectCreation();
 				closeModalWindow();
-			} else {
-				console.log(JSON.stringify(response));
-			}
+			} 
 		} catch (e) {
 			setPopupMessage(e.message);
 			setTimeout(function () { setPopupMessage("") }, 2000);

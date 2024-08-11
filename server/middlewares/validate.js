@@ -1,3 +1,4 @@
+//This file we are using for validate our request using zod
 import zod from "zod";
 
 function validateRegistrationDetails(req, res, next) {
