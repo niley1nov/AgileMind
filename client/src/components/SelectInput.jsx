@@ -15,7 +15,7 @@ export default function SelectInput(param) {
 				id={`selectInput-${param.elementName}`}
 				{...param.register}
 				name={param.elementName}
-				className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-transparent"
+				className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2"
 				onChange={param.onInputChange}
 				value={param.value}
 			>
