@@ -45,7 +45,6 @@ async function RegisterUser(req, res) {
 	}
 }
 
-
 /**
  * The function `loginUser` handles user login by checking user credentials and generating a JWT token
  * upon successful login.
