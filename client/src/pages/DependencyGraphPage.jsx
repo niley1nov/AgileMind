@@ -1,5 +1,4 @@
 import { useEffect, useCallback, useState } from "react";
-import ActionBar from "../components/ActionBar";
 import {
 	ReactFlow,
 	useNodesState,
@@ -13,7 +12,6 @@ import "../css/dependencyGraph.css";
 import { useParams } from 'react-router-dom';
 import PopupMessage from "../components/PopupMessage";
 import { apiClientForAuthReq } from "../services/apiService";
-import NavigationComponent from "../components/NavigationComponent";
 
 const connectionLineStyle = { stroke: "#fff" };
 const snapGrid = [20, 20];
@@ -24,7 +22,6 @@ const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
 const DependencyGraphPage = () => {
 	const [nodes, setNodes, onNodesChange] = useNodesState([]);
 	const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-	const [epicName, setEpicName] = useState("");
 	const [popupMessage, setPopupMessage] = useState("");
 	const [modelOutput, setModelOutput] = useState({});
 
@@ -177,7 +174,7 @@ const DependencyGraphPage = () => {
 			const node = {
 				id: String(i),
 				type: "textinput",
-				data: { label: truncateString(story, 20), points: modelOutput[story].points },
+				data: { label: truncateString(story, 30), points: modelOutput[story].points },
 				position: { x: 100 * xTopology[story], y: 160 * yTopology[story] },
 			};
 			if (source !== "") {
@@ -245,7 +242,6 @@ const DependencyGraphPage = () => {
 				}
 			});
 			if (response.status == "200" && Object.keys(modelOutput).length === 0) {
-				setEpicName(response.data.epicName);
 				setModelOutput(response.data.storyDependencies);
 			}
 		} catch (error) {
@@ -280,15 +276,6 @@ const DependencyGraphPage = () => {
 			attributionPosition="bottom-left">
 			<div className="px-20 text-white">
 				<PopupMessage message={popupMessage}></PopupMessage>
-				<div className="flex flex-col w-full h-full">
-					<div className="pt-8">
-						<NavigationComponent pageName="Epic" />
-					</div>
-					<div className="pt-8">
-						<ActionBar textToShow={`Epic: ${epicName}`}>
-						</ActionBar>
-					</div>
-				</div>
 			</div>
 		</ReactFlow>
 

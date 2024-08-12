@@ -83,7 +83,8 @@ export default function ProjectPage() {
 			}
 		} catch (error) {
 			setPopupMessage(error.message);
-			setTimeout(function () { setPopupMessage("");navigate("/login");}, 2000);
+			setTimeout(function () { setPopupMessage("");}, 2000);
+			navigate("/login");
 			return [];
 		} finally {
 			setShowSpinner(false);

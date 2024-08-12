@@ -12,6 +12,9 @@ Here’s the updated version with the additional details:
 
 3. **Set Up the Server:**
    - Navigate to the `server` folder.
+    ```bash
+     cd server
+     ```
    - Run the following command to install dependencies:
      ```bash
      npm install
@@ -27,7 +30,10 @@ Here’s the updated version with the additional details:
      ```
 
 4. **Set Up the Client:**
-   - Navigate to the `client` folder.
+   - Navigate to the `client` folder in new terminal
+    ```bash
+     cd client
+     ```
    - Run the following command to install dependencies:
      ```bash
      npm install
